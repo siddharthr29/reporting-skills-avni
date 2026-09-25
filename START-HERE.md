@@ -40,6 +40,12 @@ If Claude gives you a line starting with `!`, copy and paste it. That's you appr
 ---
 
 ## Step 1 · Explain
+**Got a requirement sheet?** (Google Sheet, Excel or CSV. This is the usual case.)
+> Read AGENTS.md. Here is the requirement sheet for **&lt;org&gt;**: **&lt;Google Sheet link or file path&gt;**. Read every tab and show me a table of each requirement marked buildable, needs clarification, or not in the data.
+
+For a Google Sheet link, the sheet must be shared as **"Anyone with the link → Viewer"**. Otherwise download it (File → Download → Microsoft Excel) and give Claude the file.
+
+**Just a message or ticket?**
 > Read AGENTS.md. A client from **&lt;org&gt;** asked: "**&lt;paste their words&gt;**". Fill in the requirement form and ask me anything that's unclear before building.
 
 Answer every question. **Don't know? Ask your lead or the client.** Don't guess.

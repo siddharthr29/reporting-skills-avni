@@ -204,17 +204,20 @@ body.show-notes .slide.active .notes{display:block}
 <!-- 4 · Step 1 Explain -->
 <section class="slide">
   <div class="head"><img src="avni-logo.png" alt="Avni"><div class="steps"><span class="done">Get ready</span><span class="on">1 Explain</span><span>2 Find</span><span>3 Build</span><span>4 Check</span><span>5 Deliver</span></div></div>
-  <h2>Step 1 · Tell Claude what the client wants</h2>
-  <p class="lead">Paste the client's words as they are. Claude will ask the questions that usually cause rework later.</p>
+  <h2>Step 1 · Give Claude the requirement sheet</h2>
+  <p class="lead">Requirements usually come as a Google Sheet or Excel file, one row per indicator. Claude reads every tab and sorts the rows for you.</p>
   <div class="cols">
-    <div class="prompt"><span class="lbl">You type</span><button class="copy">Copy</button>Read AGENTS.md. A client from <em>&lt;org name&gt;</em> asked: "<em>We want to see how many children are registered in each village, pick a village, and click the number to see the list.</em>" Fill in the requirement form and ask me anything that's unclear before building.</div>
+    <div>
+      <div class="prompt"><span class="lbl">You type</span><button class="copy">Copy</button>Read AGENTS.md. Here is the requirement sheet for <em>&lt;org name&gt;</em>: <em>&lt;Google Sheet link or file path&gt;</em>. Read every tab and show me each requirement marked buildable, needs clarification, or not in the data.</div>
+      <div class="tip"><p><b>Google Sheet link?</b> Share it as <b>"Anyone with the link → Viewer"</b>, or download it as Excel and give Claude the file. <b>Only a message from the client?</b> Paste their words instead.</p></div>
+    </div>
     <div class="chat">
-      <div class="msg c"><b class="who">Claude</b>Before I build, three questions:<ul><li>Should children who <b>left the programme</b> be counted?</li><li>Village of the <b>child</b> or of the <b>household</b>?</li><li>Which <b>dashboard</b> should this go on?</li></ul></div>
-      <div class="msg y"><b class="who">You</b>Only children still in the programme. The child's village. Put it in our practice folder for now.</div>
+      <div class="msg c"><b class="who">Claude</b>I read 3 tabs, 12 requirements:<ul><li>✅ <b>9 buildable</b>, e.g. "Children per village" (child register + village)</li><li>❓ <b>2 need clarification</b>: does "active" include children who left?</li><li>⛔ <b>1 not in the data</b>: "Screening done" isn't recorded in any form</li></ul>Shall I send the questions to the client in one message?</div>
+      <div class="msg y"><b class="who">You</b>Yes, draft it. Only children still in the programme count as active.</div>
     </div>
   </div>
-  <div class="check"><span class="t">✓ Move on when</span><p>Every question is answered. <b>Don't know an answer? Ask your lead or the client.</b> Don't guess. A wrong guess here means rebuilding later.</p></div>
-  <aside class="notes">This is the most important step. Most rework we've had came from one unclear word, like "registered" vs "enrolled". Show the filled form in templates/requirement-intake.md if there's time.</aside>
+  <div class="check"><span class="t">✓ Move on when</span><p>Every ❓ is answered. <b>Don't know an answer? Ask your lead or the client.</b> Don't guess. Build the ✅ rows first.</p></div>
+  <aside class="notes">Most real work starts from a sheet. The ✅/❓/⛔ table is the key habit: we agree on the unclear rows before building, not after. "Not in the data" is a normal, honest answer.</aside>
 </section>
 
 <!-- 5 · Step 2 Find -->

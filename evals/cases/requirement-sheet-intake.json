@@ -1,0 +1,9 @@
+{
+  "prompt": "The client shared a Google Sheet with 15 indicators and their logic for Durga India. How do we start?",
+  "must_include": [
+    "read_requirements",
+    "requirement-mapping",
+    "CATALOG"
+  ],
+  "must_not_include": []
+}

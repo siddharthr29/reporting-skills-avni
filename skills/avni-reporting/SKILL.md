@@ -25,7 +25,13 @@ All three read **the same per-org flat ETL schema** in the one `openchs` Postgre
 
 ## 3. Intake: ask once, up front
 
-Use `templates/requirement-intake.md`. The minimum you need before writing SQL:
+**Requirement sheet (the usual case: Google Sheet / .xlsx / .csv with indicators and logic):**
+1. `python3 tools/read_requirements.py <file or link> --org <schema>` → `requirements/<org>/<name>.md` (every tab; personal data masked; kept out of git).
+2. Map every row with `templates/requirement-mapping.md`: which table/column in `CATALOG.md`, plain-words logic, filters, click-through, then **✅ buildable / ❓ needs clarification / ⛔ not in data**.
+3. Send all ❓ and ⛔ questions to the client in one message, then build the ✅ rows grouped by dashboard.
+4. A private Google Sheet can't be read by link. Ask for "Anyone with the link → Viewer", or for the file (File → Download → .xlsx).
+
+**No sheet (ticket or chat):** use `templates/requirement-intake.md`. The minimum you need before writing SQL:
 - **Grain**: one row per what? (child, enrolment, visit, session, attendance mark)
 - **Definition** of each metric, meaning numerator and denominator in data terms. Confirm tricky ones: *enrolled vs registered*, *active cohort vs all*, *latest visit vs any visit*.
 - **Filters**: which ones, dropdown or free text, defaults, required or optional.

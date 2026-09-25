@@ -40,9 +40,21 @@ def is_pii_column(name):
     return bool(PII_COLUMN.search(n)) and not NOT_PII.search(n)
 
 
-def mask_rows(cols, rows):
-    """Return (masked_rows, masked_column_names, value_hits)."""
+BARE_NAME = re.compile(r"^\s*name\s*$", re.I)
+
+
+def mask_rows(cols, rows, bare_name_needs_context=False):
+    """Return (masked_rows, masked_column_names, value_hits).
+
+    bare_name_needs_context=True (requirement sheets): a column headed just "Name" is usually the
+    indicator/report name, so mask it only if the table also has another personal-data column
+    (phone, contact, DOB…) — i.e. it looks like a list of people.
+    """
     pii_idx = {i for i, c in enumerate(cols) if is_pii_column(c)}
+    if bare_name_needs_context:
+        bare = {i for i in pii_idx if BARE_NAME.match(str(cols[i]))}
+        if bare and not (pii_idx - bare):
+            pii_idx -= bare
     hits = 0
     out = []
     for row in rows:

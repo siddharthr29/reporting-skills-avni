@@ -28,6 +28,7 @@ Many users follow `START-HERE.md` and talk in plain words. Map their phrases to 
 |---|---|
 | "open the read-only connection" / "set me up" | `./tools/tunnel.sh up` and confirm "read-only proven" |
 | "download the data map for <org>" | `./tools/dump_org_schema.sh <schema>` (look up the schema from the org name: `select name, schema_name from public.organisation where name ilike '%<org>%'`) |
+| "read this requirement sheet <file / Google Sheet link>" | `python3 tools/read_requirements.py <source> --org <schema>` → read the .md → fill `templates/requirement-mapping.md` and show it as a short table: ✅ / ❓ / ⛔ per row |
 | "fill in the requirement form" | walk through `templates/requirement-intake.md` and ask **only** the open questions, max 3–4 at a time |
 | "show me the numbers, don't create anything" | run read-only queries (`tools/q.sh`), give a short table + total, no Metabase writes |
 | "show me the plan first" | list the cards, filters and click-throughs you'll create/change, then **wait for a yes** |
@@ -46,7 +47,7 @@ With beginners: explain in **simple words** (no SQL unless asked), say "table" a
 intake ──► catalogue ──► pattern ──► build (API) ──► QA ──► handover
 ```
 
-1. **Intake.** Fill `templates/requirement-intake.md` in one round of questions: grain, metric definitions, filters, drills, tool, target collection or dashboard.
+1. **Intake.** Requirements usually arrive as a **sheet** (Google Sheet, `.xlsx` or `.csv`) with one row per indicator and its logic. Run `python3 tools/read_requirements.py <file or link> --org <schema>`, read the generated `requirements/<org>/<name>.md`, then fill `templates/requirement-mapping.md`: every row marked ✅ buildable / ❓ needs clarification / ⛔ not in data, using the catalogue. Send all ❓/⛔ questions to the client in **one** message. With no sheet (a ticket or chat message), use `templates/requirement-intake.md`: grain, metric definitions, filters, drills, tool, target collection or dashboard.
 2. **Catalogue (mandatory, before any SQL).** `./tools/dump_org_schema.sh <schema>`, then **grep `schemas/<schema>/CATALOG.md`**. It's compact and already hides personal values. Re-dump when you hit "column does not exist" or the catalogue is older than 14 days.
 3. **Pattern.** Adapt a file from `sql/patterns/`. Check `skills/avni-etl-data-model` for traps (voided, coded multi-selects, UUID arrays, membership double-counts, NULL dates).
 4. **Build.** Metabase → `skills/metabase-reports`. Superset → `skills/superset-reports`. Jasper → `skills/jasper-reports` (diagnose and safe edit only).

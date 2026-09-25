@@ -10,3 +10,5 @@ __pycache__/
 *.pyc
 .DS_Store
 evals/answers/
+# client requirement sheets stay local
+requirements/
