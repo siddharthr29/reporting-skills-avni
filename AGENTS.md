@@ -17,7 +17,7 @@ Read it fully, then load **only** the skill you need.
 5. **Back up before any write.** `tools/mb.py` and `tools/ss.py` save JSON to `backups/` and are dry-run until `--apply`.
 6. **Output must be proven, not assumed.** Before saying "done", run the checks in `skills/report-qa`: metric count == drill row count, identities add up, and `EXCEPT ALL` = 0 both ways for performance rewrites.
 7. **Read the whole ticket.** The Freshdesk API returns 10 conversations per page. Paginate, and open every attachment. The latest client message is usually the real ask.
-8. **No secrets or personal data** in files, commits, logs or replies. Refer to people by role.
+8. **No secrets or personal data** in files, commits, logs or replies. Refer to people by role. **Every person uses their own logins**, set with `./tools/setup.sh` (the tools refuse settings created by someone else). Never ask anyone to paste a password or API key into the chat.
 9. **Change only what was asked.** If you spot other problems, list them, don't fix them silently.
 
 ## Working with beginners (interns, non-technical staff)
@@ -26,7 +26,7 @@ Many users follow `START-HERE.md` and talk in plain words. Map their phrases to 
 
 | They say | You do |
 |---|---|
-| "open the read-only connection" / "set me up" | `./tools/tunnel.sh up` and confirm "read-only proven" |
+| "open the read-only connection" / "set me up" | If `tools/.env` is missing or the tools say "not created by you": tell them to run `./tools/setup.sh` **themselves, in their own Terminal window**, and enter their own Metabase API key and Superset login. **Never ask for, accept, or type credentials in the chat.** Then `./tools/tunnel.sh up` and confirm "read-only proven". |
 | "download the data map for <org>" | `./tools/dump_org_schema.sh <schema>` (look up the schema from the org name: `select name, schema_name from public.organisation where name ilike '%<org>%'`) |
 | "read this requirement sheet <file / Google Sheet link>" | `python3 tools/read_requirements.py <source> --org <schema>` → read the .md → fill `templates/requirement-mapping.md` and show it as a short table: ✅ / ❓ / ⛔ per row |
 | "fill in the requirement form" | walk through `templates/requirement-intake.md` and ask **only** the open questions, max 3–4 at a time |

@@ -22,14 +22,12 @@ PII = re.compile(r"name|phone|mobile|contact|aadha|email|address|house|father|mo
 
 
 def env():
+    from _common import read_env_file, check_owner
     e = dict(os.environ)
-    path = os.path.join(TOOLS, ".env")
-    if os.path.exists(path):
-        for line in open(path):
-            line = line.strip()
-            if line and not line.startswith("#") and "=" in line:
-                k, v = line.split("=", 1)
-                e.setdefault(k.strip(), v.strip())
+    f = read_env_file()
+    check_owner(f)
+    for k, v in f.items():
+        e.setdefault(k, v)
     e.update(PGHOST="localhost", PGPORT=e.get("LOCAL_PORT", "5433"),
              PGOPTIONS="-c default_transaction_read_only=on -c statement_timeout=120000")
     return e

@@ -184,10 +184,11 @@ body.show-notes .slide.active .notes{display:block}
   <div class="cols">
     <div>
       <ol>
-        <li>Get the <b>reporting-skills-avni</b> folder and the <b>settings file</b> from your lead. The settings file is like a key: never share it.</li>
-        <li>Open <b>Terminal</b> in that folder and type <code>claude</code></li>
-        <li>Paste the message on the right.</li>
+        <li>Get the <b>reporting-skills-avni</b> folder and the <b>database access details</b> from your lead. Ask your admin for <b>your own Metabase API key</b>.</li>
+        <li>Open <b>Terminal</b> in that folder and run <code>./tools/setup.sh</code>. Enter <b>your own</b> Metabase API key and Superset login. They're hidden as you type, and it checks they work.</li>
+        <li>Type <code>claude</code> and paste the message on the right.</li>
       </ol>
+      <p style="margin:.5rem 0 0"><b>Never</b> use someone else's logins, and never paste a password into Claude.</p>
       <div class="tip"><p><b>If Claude asks permission</b> to run something, read what it says, then allow it. If it gives you a line starting with <code>!</code>, copy and paste it. That's you approving the change.</p></div>
     </div>
     <div>

@@ -2,6 +2,11 @@
 
 Curated learnings are recorded here when they move from `LEARNINGS.md` into the skills.
 
+## 2026-09-25 — everyone uses their own logins
+- `tools/setup.sh`: guided first-run setup. Each person enters their OWN Metabase API key and Superset login (hidden input); both are checked live; writes a private `tools/.env` (chmod 600) stamped `SETUP_BY=<their username>`.
+- Every tool (Python and shell) refuses settings created by someone else, e.g. a copied `.env`.
+- AGENTS.md: never ask for or accept credentials in chat. README, START-HERE, `.env.example` and deck slide 3 updated.
+
 ## 2026-09-25 — requirement sheets (Google Sheet / xlsx / csv)
 - `tools/read_requirements.py`: reads every tab of a Google Sheet link (shared "anyone with link"), .xlsx or .csv → `requirements/<org>/<name>.md` (gitignored); stdlib only; title rows, blank columns and merged group cells handled; personal data masked (bare "Name" only when the tab is a people list).
 - `templates/requirement-mapping.md`: every row → ✅ buildable / ❓ needs clarification / ⛔ not in data.

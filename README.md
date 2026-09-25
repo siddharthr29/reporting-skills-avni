@@ -34,7 +34,7 @@ Reports for Avni orgs kept going wrong in the same few ways. Drill-downs opened 
 ```bash
 git clone https://github.com/siddharthr29/reporting-skills-avni.git
 cd reporting-skills-avni
-cp tools/.env.example tools/.env      # fill in: SSH key/host, read DB host, Metabase key, Superset login
+./tools/setup.sh                      # enter YOUR OWN Metabase API key + Superset login (hidden), DB access from your lead
 ./tools/tunnel.sh up                  # read-only tunnel to the replica; proves a write FAILS
 ./tools/dump_org_schema.sh <schema>   # e.g. sangwari → schemas/sangwari/CATALOG.md (gitignored)
 ```
@@ -67,7 +67,7 @@ The agent reads `AGENTS.md`, then `skills/avni-reporting/SKILL.md`, then the cat
 
 ## Safety in one paragraph
 
-Production is **read-only, always**. The tunnel sets `default_transaction_read_only=on` and proves a write fails. Report changes are made **in place**; never recreate a card or dashboard, because users bookmark links. Every write through `tools/mb.py` or `tools/ss.py` is a dry-run until you pass `--apply`, and it saves a JSON backup first. Nothing secret or personal goes in this repo: `tools/.env`, `schemas/` and `backups/` are gitignored, and CI runs a secret and anonymisation scan.
+**Everyone uses their own logins.** `./tools/setup.sh` asks for your personal Metabase API key and Superset username/password and checks they work. The tools refuse to run with a settings file someone else created. Production is **read-only, always**. The tunnel sets `default_transaction_read_only=on` and proves a write fails. Report changes are made **in place**; never recreate a card or dashboard, because users bookmark links. Every write through `tools/mb.py` or `tools/ss.py` is a dry-run until you pass `--apply`, and it saves a JSON backup first. Nothing secret or personal goes in this repo: `tools/.env`, `schemas/` and `backups/` are gitignored, and CI runs a secret and anonymisation scan.
 
 ## What's anonymised
 

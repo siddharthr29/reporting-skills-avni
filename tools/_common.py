@@ -6,15 +6,32 @@ ROOT = os.path.dirname(TOOLS)
 BACKUPS = os.path.join(ROOT, "backups")
 
 
-def load_env():
+def read_env_file(path=None):
+    path = path or os.environ.get("AVNI_REPORTING_ENV") or os.path.join(TOOLS, ".env")
     env = {}
-    path = os.path.join(TOOLS, ".env")
     if os.path.exists(path):
         for line in open(path):
             line = line.strip()
             if line and not line.startswith("#") and "=" in line:
                 k, v = line.split("=", 1)
                 env[k.strip()] = v.strip()
+    return env
+
+
+def check_owner(env):
+    """Everyone uses their OWN logins: refuse a settings file someone else created."""
+    import getpass
+    me, by = getpass.getuser(), env.get("SETUP_BY")
+    if not env:
+        die("No settings yet. Run:  ./tools/setup.sh   (enter YOUR OWN Metabase API key and Superset login)")
+    if by != me:
+        die(f"These settings were not created by you (created by: {by or 'unknown'}; you are: {me}).\n"
+            "Everyone must use their own credentials. Run:  ./tools/setup.sh")
+
+
+def load_env():
+    env = read_env_file()
+    check_owner(env)
     env.update({k: v for k, v in os.environ.items() if k in env or k.startswith(("METABASE_", "SUPERSET_"))})
     return env
 

@@ -9,7 +9,12 @@ ok()   { printf '  \033[32m✓\033[0m %s\n' "$*" >&2; }
 err()  { printf '  \033[31m✗\033[0m %s\n' "$*" >&2; }
 
 load_env() {
-  [ -f "$ENV_FILE" ] || { err "missing $ENV_FILE — copy tools/.env.example to tools/.env"; return 1; }
+  [ -f "$ENV_FILE" ] || { err "no settings yet — run ./tools/setup.sh (enter YOUR OWN logins)"; exit 1; }
+  local by; by=$(grep -E '^SETUP_BY=' "$ENV_FILE" | cut -d= -f2- || true)
+  if [ "$by" != "$(id -un)" ]; then
+    err "these settings were not created by you (created by: ${by:-unknown}; you are: $(id -un))."
+    err "Everyone must use their own credentials. Run: ./tools/setup.sh"; exit 1
+  fi
   set -a; # shellcheck disable=SC1090
   . "$ENV_FILE"; set +a
   SSH_KEY="${SSH_KEY/#\~/$HOME}"

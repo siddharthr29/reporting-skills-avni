@@ -28,9 +28,9 @@ Reports can be **up to ~1.5 hours behind** the Avni app. That's normal.
 ---
 
 ## Get ready (once, ~10 minutes)
-1. Get this folder and the **settings file** (`tools/.env`) from your lead. Never share the settings file.
-2. Open **Terminal** in this folder and type `claude`.
-3. Paste:
+1. Get this folder and the **database access details** from your lead. Ask your admin for **your own Metabase API key**, and have your **Superset username and password** ready.
+2. Open **Terminal** in this folder and run `./tools/setup.sh`. Enter **your own** Metabase API key and Superset login (they're hidden as you type). It checks each one works. Never use someone else's logins, and never paste passwords into Claude.
+3. Type `claude`, then paste:
    > Set me up for reporting: open the read-only connection and download the data map for **&lt;org name&gt;**. Tell me in simple words when it's ready.
 
 ✓ Ready when Claude says **read-only** and **data map saved**.
