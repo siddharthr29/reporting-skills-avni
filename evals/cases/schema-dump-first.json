@@ -1,0 +1,10 @@
+{
+  "prompt": "New org request from Khel Mel: build attendance by month. Where do I start?",
+  "must_include": [
+    "dump_org_schema",
+    "CATALOG"
+  ],
+  "must_not_include": [
+    "information_schema.columns"
+  ]
+}

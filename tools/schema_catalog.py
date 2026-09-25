@@ -10,6 +10,8 @@ suggests personal data. The output is gitignored; never commit it.
 Requires the tunnel (tools/tunnel.sh up) and tools/.env.
 """
 import os, re, subprocess, sys, datetime
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _pii import is_pii_column
 
 TOOLS = os.path.dirname(os.path.abspath(__file__))
 STD = {"id", "uuid", "is_voided", "organisation_id", "created_by_id", "last_modified_by_id",
@@ -98,7 +100,7 @@ def main():
             if mcv.startswith('{"[') or mcv.startswith("{[\""):
                 tag += " UUID-array"
             elif (dt in ("text", "character varying") and 0 < nd <= 30 and mcv
-                  and not PII.search(c)):
+                  and not PII.search(c) and not is_pii_column(c)):
                 vals = [v.strip('"') for v in re.findall(r'"(?:[^"\\]|\\.)*"|[^,{}]+', mcv.strip("{}"))]
                 tag += " [" + "|".join(vals[:12]) + ("|…" if len(vals) > 12 else "") + "]"
             parts.append(tag)

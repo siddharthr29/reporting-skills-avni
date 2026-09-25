@@ -21,6 +21,10 @@ This guide follows the session deck: https://siddharthr29.github.io/reporting-sk
 
 Reports can be **up to ~1.5 hours behind** the Avni app. That's normal.
 
+## Two rules, always
+1. **Download the data map first** for every NGO you work on (the "Get ready" step). Claude reads that file instead of searching the live system, which is faster and cheaper. The tools refuse to run until it's done.
+2. **Never share personal details with Claude.** Don't paste client Excel lists, beneficiary names, phone numbers or screenshots showing people's details. Claude never needs them: the tools hide names, phones, Aadhaar, dates of birth and addresses automatically, and every check uses counts. To see the real list, open the report in Metabase yourself.
+
 ---
 
 ## Get ready (once, ~10 minutes)

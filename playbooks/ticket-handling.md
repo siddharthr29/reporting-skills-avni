@@ -8,7 +8,7 @@ GET /api/v2/tickets/<id>/conversations?page=1&per_page=30
 GET /api/v2/tickets/<id>/conversations?page=2&per_page=30 ...
 ```
 - Open **every attachment** (xlsx order sheets, screenshots, CSV exports). The requirement often lives there, not in the body. Attachment URLs are pre-signed, so fetch them without an auth header.
-- If an attachment holds personal data (e.g. an ID card), don't reproduce it. Ask the client to remove it.
+- **Personal data in attachments** (beneficiary lists, ID cards, screenshots with names or phone numbers): do **not** pass them to the AI. Ask the client for a de-identified version (counts, IDs only), or run a local script that outputs counts. Ask the client to remove ID documents from the ticket.
 - Read private notes too. A colleague may already have done half the work.
 
 ## 2. Reproduce before fixing

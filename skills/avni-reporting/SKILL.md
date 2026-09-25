@@ -35,7 +35,7 @@ Use `templates/requirement-intake.md`. The minimum you need before writing SQL:
 
 ## 4. Build path
 
-1. `./tools/dump_org_schema.sh <schema>`, then grep `schemas/<schema>/CATALOG.md` for the tables and columns.
+1. **First, always:** `./tools/dump_org_schema.sh <schema>`, then grep `schemas/<schema>/CATALOG.md` for the tables and columns. Don't browse the live DB for structure (the tools refuse un-dumped schemas).
 2. Read the traps list in `avni-etl-data-model`.
 3. Start from `sql/patterns/*.sql`. Shape every card as **base CTE (filters + voided) → metric → labelled output**.
 4. Validate the SQL read-only (`tools/q.sh`), with filters stripped (`[[ ... ]]` removed) and then with filters set.
@@ -61,3 +61,6 @@ Then open the matching playbook: `filter-issues.md`, `drilldown-issues.md`, `cou
 - **Honest blanks**: missing fields read `(Not collected yet)`, and LEFT JOIN so they fill in later.
 - **Loads under 30s** cold. Line lists capped at `LIMIT 2000` (the Metabase display cap).
 - **No raw UUIDs** in output. Resolve them to names.
+
+## Privacy: no PII to the AI
+Reports may show beneficiary names to the *client*. **You** (the agent) only ever see masked output. Check line lists by row count. Query only through `tools/q.sh`, `mb.py run`, `ss.py sqllab`, which mask names, phones, IDs, DOB, addresses and GPS. Never open client files or screenshots containing people's details.

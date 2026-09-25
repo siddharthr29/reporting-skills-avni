@@ -10,6 +10,8 @@
 """
 import argparse, json, sys, time, urllib.parse
 from _common import Http, backup, die, load_env, show_diff
+from _guard import require_catalog
+from _pii import print_table
 
 ENV = load_env()
 
@@ -81,18 +83,21 @@ def main():
 
     elif a.cmd == "sqllab":
         sql = open(a.file).read() if a.file else a.sql
+        require_catalog(sql)
         if a.count:
             sql = f"select count(*) as n from (\n{sql}\n) q"
         t0 = time.time()
         r = api.post("/api/v1/sqllab/execute/", {"database_id": a.db, "sql": sql, "schema": None,
                                                  "runAsync": False, "json": True, "tab": "reporting-skills"})
         rows = r.get("data") or []
-        print(json.dumps(rows[:20], indent=1, default=str))
-        print(f"-- {len(rows)} rows returned in {time.time() - t0:.2f}s (status={r.get('status')})", file=sys.stderr)
+        cols = [c.get("column_name") or c.get("name") for c in (r.get("columns") or [])] or (list(rows[0]) if rows else [])
+        print_table(cols, [[row.get(c) for c in cols] for row in rows], 20)   # PII masked before printing
+        print(f"-- returned in {time.time() - t0:.2f}s (status={r.get('status')})", file=sys.stderr)
 
     elif a.cmd == "set-dataset-sql":
         cur = api.get(f"/api/v1/dataset/{a.id}")["result"]
         new = open(a.file).read()
+        require_catalog(new)
         if not show_diff(cur.get("sql") or "", new):
             return
         if not a.apply:

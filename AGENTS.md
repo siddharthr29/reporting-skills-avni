@@ -6,13 +6,19 @@ Read it fully, then load **only** the skill you need.
 
 ## Golden rules (non-negotiable)
 
-1. **Production is read-only.** Query only through `tools/tunnel.sh` (sets `default_transaction_read_only=on`) or `tools/q.sh`. Never run INSERT/UPDATE/DELETE/DDL on any Avni database. Indexes and ETL changes belong to Avni infra.
-2. **Patch in place, never recreate.** Cards, dashboards, datasets and charts have bookmarked URLs. Change SQL and settings on the existing object. When editing a Metabase card, reuse its existing `template-tags` and `parameters` verbatim.
-3. **Back up before any write.** `tools/mb.py` and `tools/ss.py` save JSON to `backups/` and are dry-run until `--apply`.
-4. **Output must be proven, not assumed.** Before saying "done", run the checks in `skills/report-qa`: metric count == drill row count, identities add up, and `EXCEPT ALL` = 0 both ways for performance rewrites.
-5. **Read the whole ticket.** The Freshdesk API returns 10 conversations per page. Paginate, and open every attachment. The latest client message is usually the real ask.
-6. **No secrets or personal data** in files, commits, logs or replies. Refer to people by role.
-7. **Change only what was asked.** If you spot other problems, list them, don't fix them silently.
+1. **Dump the org's schema first. Every time you start work on an org.** Run `./tools/dump_org_schema.sh <schema>`, then read and grep `schemas/<schema>/CATALOG.md` for tables, columns and coded values. Do **not** explore `information_schema` or browse the database/Metabase to discover structure. That wastes tokens and API/DB calls. The tools enforce this: any query on an org schema without a local catalogue is refused.
+2. **No personal data (PII) goes to the AI.** Names, phone numbers, Aadhaar/ABHA/bank/ration numbers, dates of birth, addresses, GPS, emails and staff names must never enter your context.
+   - Work with **counts and aggregates**. Verify line lists by **row counts**, not by reading rows.
+   - Only run SQL through `tools/q.sh`, `tools/mb.py run`, `tools/ss.py sqllab`. They **mask PII automatically**. Never run raw `psql` or open exported data files.
+   - Never ask the user to paste client spreadsheets, beneficiary lists or screenshots showing people's details. If one arrives in a ticket, don't open it. Ask for a de-identified version, or process it with a local script that outputs counts only.
+   - Never put PII in files, commits, learnings, replies or eval cases.
+3. **Production is read-only.** Query only through `tools/tunnel.sh` (sets `default_transaction_read_only=on`) or `tools/q.sh`. Never run INSERT/UPDATE/DELETE/DDL on any Avni database. Indexes and ETL changes belong to Avni infra.
+4. **Patch in place, never recreate.** Cards, dashboards, datasets and charts have bookmarked URLs. Change SQL and settings on the existing object. When editing a Metabase card, reuse its existing `template-tags` and `parameters` verbatim.
+5. **Back up before any write.** `tools/mb.py` and `tools/ss.py` save JSON to `backups/` and are dry-run until `--apply`.
+6. **Output must be proven, not assumed.** Before saying "done", run the checks in `skills/report-qa`: metric count == drill row count, identities add up, and `EXCEPT ALL` = 0 both ways for performance rewrites.
+7. **Read the whole ticket.** The Freshdesk API returns 10 conversations per page. Paginate, and open every attachment. The latest client message is usually the real ask.
+8. **No secrets or personal data** in files, commits, logs or replies. Refer to people by role.
+9. **Change only what was asked.** If you spot other problems, list them, don't fix them silently.
 
 ## Working with beginners (interns, non-technical staff)
 
@@ -30,6 +36,8 @@ Many users follow `START-HERE.md` and talk in plain words. Map their phrases to 
 | "write the reply" | `templates/client-reply.md`, plain language, only verified claims |
 | "/learn" | `skills/report-learnings` capture step |
 
+If a beginner asks to "show the list with names/phone numbers": explain that the AI never sees personal details, and show counts plus the masked list instead. They can open the real list themselves in Metabase.
+
 With beginners: explain in **simple words** (no SQL unless asked), say "table" as "register/list", show small result tables, always **plan before building**, build in the **practice folder** unless told otherwise, and give them the exact line to paste when a write needs their approval.
 
 ## Workflow
@@ -39,7 +47,7 @@ intake ──► catalogue ──► pattern ──► build (API) ──► QA 
 ```
 
 1. **Intake.** Fill `templates/requirement-intake.md` in one round of questions: grain, metric definitions, filters, drills, tool, target collection or dashboard.
-2. **Catalogue.** `./tools/dump_org_schema.sh <schema>`, then **grep `schemas/<schema>/CATALOG.md`** instead of querying `information_schema` repeatedly. Re-dump when you hit "column does not exist".
+2. **Catalogue (mandatory, before any SQL).** `./tools/dump_org_schema.sh <schema>`, then **grep `schemas/<schema>/CATALOG.md`**. It's compact and already hides personal values. Re-dump when you hit "column does not exist" or the catalogue is older than 14 days.
 3. **Pattern.** Adapt a file from `sql/patterns/`. Check `skills/avni-etl-data-model` for traps (voided, coded multi-selects, UUID arrays, membership double-counts, NULL dates).
 4. **Build.** Metabase → `skills/metabase-reports`. Superset → `skills/superset-reports`. Jasper → `skills/jasper-reports` (diagnose and safe edit only).
 5. **QA.** `skills/report-qa` + `tools/qa.py`. Time it cold and warm. It must load well under 60s (Superset) or 120s (Metabase), and should be under 30s.

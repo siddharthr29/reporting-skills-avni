@@ -6,6 +6,7 @@ description: Verification checklist and methods to prove an Avni report is corre
 # Report QA — prove it, then claim it
 
 A reply to a client may only claim what one of these checks proved.
+Every check here works on **counts and masked output**. You never need to read a person's name to verify a report.
 
 ## The checklist (run all that apply)
 

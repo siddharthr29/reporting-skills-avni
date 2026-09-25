@@ -9,6 +9,7 @@
 """
 import argparse, os, re, subprocess, sys, time
 from _common import die, load_env, strip_optional, template_vars
+from _guard import require_catalog
 
 ENV = load_env()
 UUID = re.compile(r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}", re.I)
@@ -34,6 +35,7 @@ def prep(path):
     sql = strip_optional(open(path).read()).strip().rstrip(";")
     if template_vars(sql):
         die(f"{path}: required variables remain {template_vars(sql)}")
+    require_catalog(sql)
     return sql
 
 

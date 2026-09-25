@@ -15,6 +15,8 @@
 """
 import argparse, json, sys, uuid
 from _common import Http, backup, die, load_env, show_diff, strip_optional, template_vars
+from _guard import require_catalog
+from _pii import print_table
 
 ENV = load_env()
 
@@ -76,16 +78,13 @@ def cmd_run(api, a):
     sql = strip_optional(sql)
     if template_vars(sql):
         die(f"required variables remain: {template_vars(sql)} — substitute test values")
+    require_catalog(sql)
     r = api.post("/dataset", {"database": a.db, "type": "native", "native": {"query": sql}})
     if r.get("status") == "failed" or r.get("error"):
         die(str(r.get("error"))[:600])
     cols = [c["name"] for c in r["data"]["cols"]]
-    rows = r["data"]["rows"]
-    print("\t".join(cols))
-    for row in rows[: a.limit]:
-        print("\t".join("" if v is None else str(v) for v in row))
-    print(f"-- {r.get('row_count', len(rows))} rows (showing ≤{a.limit}; API caps at 2000) in {r.get('running_time')} ms",
-          file=sys.stderr)
+    print_table(cols, r["data"]["rows"], a.limit)          # PII masked before printing
+    print(f"-- ran in {r.get('running_time')} ms (API caps at 2000 rows)", file=sys.stderr)
 
 
 def cmd_set_sql(api, a):
@@ -94,6 +93,7 @@ def cmd_set_sql(api, a):
     if old is None:
         die("not a native SQL card")
     new = open(a.file).read()
+    require_catalog(new)
     new_vars = template_vars(new)
     keep = {k: v for k, v in tags.items() if k in new_vars}          # reuse existing tags VERBATIM
     added = [v for v in new_vars if v not in tags]
@@ -121,6 +121,7 @@ def cmd_set_sql(api, a):
 
 def cmd_create_card(api, a):
     sql = open(a.file).read()
+    require_catalog(sql)
     tags = {}
     for v in template_vars(sql):
         is_date = "date" in v

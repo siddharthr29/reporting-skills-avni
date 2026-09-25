@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(./tools/.env)",
+      "Read(**/.env)",
+      "Read(**/*.pem)",
+      "Bash(cat tools/.env*)",
+      "Bash(psql:*)",
+      "Bash(*/psql:*)",
+      "Bash(pg_dump:*)",
+      "Bash(*/pg_dump:*)"
+    ]
+  }
+}
