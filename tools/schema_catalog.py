@@ -49,7 +49,7 @@ def main():
         sys.exit(__doc__)
     s, exact = sys.argv[1], "--exact" in sys.argv
 
-    rels = q(f"""select c.relname, c.relkind, greatest(c.reltuples,0)::bigint
+    rels = q(f"""select c.relname, c.relkind, c.reltuples::bigint
                  from pg_class c join pg_namespace n on n.oid = c.relnamespace
                  where n.nspname = '{s}' and c.relkind in ('r','v','m','p') order by 1""")
     if not rels:
@@ -74,8 +74,12 @@ def main():
         if exact and kind in ("r", "p", "m"):
             n = q(f'select count(*) from "{s}"."{name}"')[0][0]
             size = f"{int(n):,} rows"
+        elif kind_s:
+            size = kind_s
+        elif int(est) < 0:
+            size = "size unknown — never analysed; use --exact"   # reltuples = -1, NOT the same as empty
         else:
-            size = kind_s or f"~{int(est):,} rows"
+            size = f"~{int(est):,} rows"
         head = f"## {name}  ({size})"
         if name.endswith("_coded"):
             head += "  — coded EAV: one row per selected answer (id, concept_name, answer)"
