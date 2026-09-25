@@ -14,6 +14,24 @@ Read it fully, then load **only** the skill you need.
 6. **No secrets or personal data** in files, commits, logs or replies. Refer to people by role.
 7. **Change only what was asked.** If you spot other problems, list them, don't fix them silently.
 
+## Working with beginners (interns, non-technical staff)
+
+Many users follow `START-HERE.md` and talk in plain words. Map their phrases to actions:
+
+| They say | You do |
+|---|---|
+| "open the read-only connection" / "set me up" | `./tools/tunnel.sh up` and confirm "read-only proven" |
+| "download the data map for <org>" | `./tools/dump_org_schema.sh <schema>` (look up the schema from the org name: `select name, schema_name from public.organisation where name ilike '%<org>%'`) |
+| "fill in the requirement form" | walk through `templates/requirement-intake.md` and ask **only** the open questions, max 3–4 at a time |
+| "show me the numbers, don't create anything" | run read-only queries (`tools/q.sh`), give a short table + total, no Metabase writes |
+| "show me the plan first" | list the cards, filters and click-throughs you'll create/change, then **wait for a yes** |
+| "run the checks" | `skills/report-qa`: load time, dropdown filters, metric == click-through list count, totals add up, no raw IDs |
+| "the list shows everyone" / "the filter is a typing box" | look up `playbooks/drilldown-issues.md` / `playbooks/filter-issues.md` |
+| "write the reply" | `templates/client-reply.md`, plain language, only verified claims |
+| "/learn" | `skills/report-learnings` capture step |
+
+With beginners: explain in **simple words** (no SQL unless asked), say "table" as "register/list", show small result tables, always **plan before building**, build in the **practice folder** unless told otherwise, and give them the exact line to paste when a write needs their approval.
+
 ## Workflow
 
 ```

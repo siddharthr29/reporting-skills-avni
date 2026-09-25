@@ -3,364 +3,326 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Avni Reporting with AI Agents</title>
-<meta name="description" content="1-hour hands-on session: building Avni reports in Metabase, Superset and Jasper with AI coding agents.">
+<title>Your First Avni Report with Claude</title>
+<meta name="description" content="A 1-hour, step-by-step session: build an Avni report with Claude, from the client's request to a working dashboard.">
 <link rel="icon" href="avni-logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
 <style>
 :root{
-  --g1:#5fc3a3; --g2:#3f9a78; --g3:#2c6e56; --ink:#14201b; --muted:#5b6b64; --line:#dde7e2;
-  --bg:#f6faf8; --card:#ffffff; --code:#10211a; --codeink:#d8f3e8; --warn:#c2410c; --ok:#15803d;
-  --sans:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --g1:#5fc3a3;--g2:#3f9a78;--g3:#2c6e56;--gl:#e7f5ef;--ink:#15201b;--muted:#5d6b65;--line:#dbe6e0;
+  --bg:#f7fbf9;--card:#fff;--amber:#b45309;--amberl:#fff6e5;
+  --sans:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:var(--sans)}
 .deck{position:relative;height:100vh;overflow:hidden}
-.slide{position:absolute;inset:0;padding:3.2vh 4.5vw 7vh;display:flex;flex-direction:column;
-  opacity:0;pointer-events:none;transform:translateX(24px);transition:opacity .35s,transform .35s}
-.slide.active{opacity:1;pointer-events:auto;transform:none}
-.top{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.6vh}
-.top img{height:34px}
-.kicker{font-size:.8rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--g2)}
-h1{font-size:clamp(1.9rem,4.2vw,3.4rem);line-height:1.05;margin:.2em 0 .3em;font-weight:800;letter-spacing:-.02em}
-h2{font-size:clamp(1.4rem,2.8vw,2.3rem);margin:.1em 0 .5em;font-weight:800;letter-spacing:-.015em}
-h3{font-size:clamp(1.02rem,1.45vw,1.3rem);margin:0 0 .4em;font-weight:700}
-p,li{font-size:clamp(.95rem,1.45vw,1.28rem);line-height:1.45}
-.slide>.grid{margin-block:auto}
-.slide>.pipe{margin-top:auto}.slide>.pipe+.grid{margin-top:.4rem}
-.muted{color:var(--muted)}
-.grid{display:grid;gap:1.1rem;min-height:0;align-items:start;align-content:start}
-.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1rem 1.1rem;min-width:0}
-.card.accent{border-top:4px solid var(--g1)}
-.card p{margin:.2em 0}
-code,.mono{font-family:var(--mono);font-size:.86em}
-:not(pre)>code{background:#e6f3ed;color:var(--g3);padding:.08em .35em;border-radius:5px}
-pre{background:var(--code);color:var(--codeink);border-radius:12px;padding:.9rem 1rem;margin:.4rem 0;
-  font-family:var(--mono);font-size:clamp(.74rem,1.08vw,1rem);line-height:1.55;overflow-x:auto;white-space:pre}
-pre .c{color:#7fb59d}pre .k{color:#8be9c1;font-weight:600}pre .w{color:#fcd34d}
-.pill{display:inline-block;padding:.18em .6em;border-radius:999px;background:#e6f3ed;color:var(--g3);font-weight:600;font-size:.8rem;margin:.15em .2em .15em 0}
-.big{font-size:clamp(2.2rem,5vw,4.2rem);font-weight:800;letter-spacing:-.03em;line-height:1}
-.bad{color:var(--warn)}.good{color:var(--ok)}
-ul{margin:.3em 0;padding-left:1.15em}li{margin:.18em 0}
-/* architecture */
-.arch{display:flex;align-items:stretch;gap:.6rem;flex-wrap:wrap;margin:.6rem 0 1rem}
-.box{flex:1;min-width:140px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.7rem .8rem}
-.box b{display:block;font-size:.95rem}.box span{font-size:.82rem;color:var(--muted)}
-.box.g{background:linear-gradient(135deg,var(--g1),var(--g2));color:#fff;border:0}.box.g span{color:#e9fff6}
-.arrow{align-self:center;font-weight:800;color:var(--g2);font-size:1.3rem}
-.tools{display:flex;flex-direction:column;gap:.4rem;flex:1.2;min-width:170px}
-.tools .box{padding:.45rem .7rem}
-/* pipeline */
-.pipe{display:flex;gap:.45rem;flex-wrap:wrap;margin:.4rem 0 1rem}
-.step{flex:1;min-width:110px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.6rem .7rem;position:relative}
-.step i{font-style:normal;display:inline-grid;place-items:center;width:1.5rem;height:1.5rem;border-radius:50%;background:var(--g2);color:#fff;font-size:.8rem;font-weight:700;margin-right:.35rem}
-.step b{font-size:clamp(.92rem,1.2vw,1.1rem)}.step div{font-size:clamp(.8rem,1vw,.95rem);color:var(--muted);margin-top:.25rem}
-.step.learn{border:2px dashed var(--g1)}
-.prompt{background:#fff;border-left:4px solid var(--g1);border-radius:8px;padding:.6rem .9rem;margin:.45rem 0;font-size:clamp(.92rem,1.3vw,1.15rem)}
-/* title */
-.hero{flex:1;display:grid;grid-template-columns:1.25fr 1fr;gap:2.5rem;align-items:center}
-.hero img.logo{height:64px;margin-bottom:1.2rem}
-.loop{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}
-.loop .box{min-width:120px;text-align:center}
+.slide{position:absolute;inset:0;padding:2.6vh 4.5vw 8vh;display:flex;flex-direction:column;opacity:0;pointer-events:none;transition:opacity .3s}
+.slide.active{opacity:1;pointer-events:auto}
+/* header: logo + step tracker */
+.head{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:2vh}
+.head img{height:30px}
+.steps{display:flex;gap:.35rem;flex-wrap:wrap}
+.steps span{font-size:.78rem;font-weight:600;padding:.28em .75em;border-radius:999px;background:#eef3f1;color:#8a9892}
+.steps span.on{background:var(--g2);color:#fff}
+.steps span.done{background:var(--gl);color:var(--g3)}
+h1{font-size:clamp(2rem,4.4vw,3.6rem);line-height:1.05;margin:.1em 0 .25em;font-weight:800;letter-spacing:-.02em}
+h2{font-size:clamp(1.6rem,3.2vw,2.6rem);line-height:1.1;margin:0 0 .25em;font-weight:800;letter-spacing:-.015em}
+.lead{font-size:clamp(1.05rem,1.6vw,1.4rem);color:var(--muted);margin:0 0 1.4vh;max-width:60ch;line-height:1.4}
+h3{font-size:clamp(1rem,1.35vw,1.2rem);margin:0 0 .5em;font-weight:700;color:var(--g3);text-transform:uppercase;letter-spacing:.06em}
+p,li{font-size:clamp(1rem,1.4vw,1.25rem);line-height:1.45}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:1.6rem;align-items:start;margin-block:auto}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.25rem;min-width:0}
+code{font-family:var(--mono);font-size:.88em;background:var(--gl);color:var(--g3);padding:.05em .35em;border-radius:5px}
+/* the prompt to type */
+.prompt{position:relative;background:#11231c;color:#e9fbf3;border-radius:14px;padding:1rem 1.1rem 1rem;font-size:clamp(.98rem,1.35vw,1.2rem);line-height:1.5}
+.prompt .lbl{display:block;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#8fd9b9;margin-bottom:.4rem}
+.prompt em{font-style:normal;color:#fde68a}
+.copy{position:absolute;top:.6rem;right:.6rem;border:0;background:#2b4a3e;color:#dff7ec;border-radius:8px;padding:.3rem .6rem;font-size:.78rem;cursor:pointer}
+.copy:hover{background:#3b6353}
+/* chat mock */
+.chat{display:flex;flex-direction:column;gap:.55rem}
+.msg{max-width:92%;padding:.65rem .9rem;border-radius:14px;font-size:clamp(.95rem,1.3vw,1.12rem);line-height:1.45}
+.msg.c{background:#fff;border:1px solid var(--line);align-self:flex-start;border-bottom-left-radius:4px}
+.msg.y{background:var(--g2);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.msg b.who{display:block;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;opacity:.7;margin-bottom:.15rem}
+.msg ul{margin:.2em 0 0;padding-left:1.1em}.msg li{font-size:inherit;margin:.1em 0}
+/* checks */
+.check{display:flex;gap:.8rem;align-items:flex-start;background:var(--gl);border-radius:14px;padding:.8rem 1.1rem;margin-top:1.8vh}
+.check .t{font-weight:800;color:var(--g3);white-space:nowrap;font-size:clamp(1rem,1.35vw,1.2rem)}
+.check p{margin:0}
+.tip{background:var(--amberl);border-left:5px solid #f59e0b;border-radius:10px;padding:.7rem 1rem;margin-top:1rem}
+.tip p{margin:0}
+ul.plain{list-style:none;padding:0;margin:.2em 0}
+ul.plain li{padding:.35em 0 .35em 2rem;position:relative}
+ul.plain li::before{content:"☐";position:absolute;left:0;color:var(--g2);font-size:1.25em;line-height:1.1}
+/* title slide */
+.hero{display:grid;grid-template-columns:1.05fr 1fr;gap:3vw;align-items:center;margin-block:auto}
+.quote{background:#fff;border:1px solid var(--line);border-left:6px solid var(--g1);border-radius:14px;padding:1rem 1.2rem;font-size:clamp(1.05rem,1.5vw,1.3rem);line-height:1.45}
+.quote small{display:block;color:var(--muted);font-size:.8em;margin-top:.4rem}
+.journey{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1.4rem}
+.journey div{flex:1;min-width:110px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:.6rem .7rem;text-align:center;font-weight:700}
+.journey div span{display:block;font-weight:500;color:var(--muted);font-size:.85rem;margin-top:.15rem}
+/* dashboard mock */
+.mock{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 12px 36px rgba(20,60,45,.10);overflow:hidden}
+.mock .bar{background:#f1f6f4;border-bottom:1px solid var(--line);padding:.55rem .9rem;font-size:.85rem;color:var(--muted);display:flex;gap:.5rem;align-items:center}
+.mock .bar i{width:.6rem;height:.6rem;border-radius:50%;background:#d6e2dc;display:inline-block}
+.mock .body{padding:1rem}
+.filt{display:inline-flex;gap:.4rem;align-items:center;border:1px solid var(--line);border-radius:10px;padding:.35rem .7rem;font-size:.9rem;margin-bottom:.8rem}
+.filt b{color:var(--g3)}
+.mrow{display:grid;grid-template-columns:.9fr 1.4fr;gap:.8rem}
+.num{border:1px solid var(--line);border-radius:12px;padding:.8rem;text-align:center;cursor:pointer;position:relative}
+.num .v{font-size:2.2rem;font-weight:800;color:var(--g3);line-height:1}
+.num .l{font-size:.85rem;color:var(--muted);margin-top:.3rem}
+.num .hand{position:absolute;right:.5rem;bottom:.3rem;font-size:1.1rem}
+.bars{border:1px solid var(--line);border-radius:12px;padding:.7rem .8rem;font-size:.8rem}
+.bars div{display:flex;align-items:center;gap:.4rem;margin:.28rem 0}
+.bars div span{width:4.2rem;color:var(--muted)}
+.bars div i{height:.7rem;border-radius:4px;background:linear-gradient(90deg,var(--g1),var(--g2));display:block}
+.list{margin-top:.8rem;border:1px solid var(--line);border-radius:12px;font-size:.82rem;overflow:hidden}
+.list div{display:grid;grid-template-columns:1fr 1fr 1fr;padding:.35rem .7rem;border-top:1px solid var(--line)}
+.list div:first-child{border-top:0;background:#f5f9f7;font-weight:700}
+/* how it works flow */
+.flow{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;margin:1vh 0 2.4vh}
+.flow .n{flex:1;min-width:150px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:.8rem 1rem;text-align:center}
+.flow .n .e{font-size:1.9rem}.flow .n b{display:block;margin-top:.2rem;font-size:clamp(1rem,1.3vw,1.15rem)}
+.flow .n span{font-size:.9rem;color:var(--muted)}
+.flow .a{font-size:1.6rem;color:var(--g2);font-weight:800}
+.words{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem}
+.words .card b{display:block;font-size:clamp(1.05rem,1.4vw,1.25rem);margin-bottom:.2rem}
+.words .card span{color:var(--muted);font-size:clamp(.92rem,1.2vw,1.05rem)}
+.who{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.4rem}
+.who .card{border-top:5px solid var(--g1)}
 /* chrome */
-.nav{position:fixed;bottom:1.4vh;left:0;right:0;display:flex;justify-content:center;align-items:center;gap:.8rem;z-index:5}
-.nav button{border:1px solid var(--line);background:#fff;border-radius:999px;width:2.4rem;height:2.4rem;cursor:pointer;font-size:1rem;color:var(--g3)}
-.nav button:hover{background:#e6f3ed}
-.count{font-size:.85rem;color:var(--muted);min-width:4.5rem;text-align:center}
-.bar{position:fixed;top:0;left:0;height:4px;background:linear-gradient(90deg,var(--g1),var(--g2));transition:width .3s;z-index:5}
-.time{font-size:.8rem;font-weight:600;color:var(--g3);background:#e6f3ed;border-radius:999px;padding:.2em .7em}
-.notes{display:none;position:fixed;right:1rem;bottom:4.6rem;max-width:420px;background:#10211a;color:#e7fbf2;border-radius:12px;
-  padding:.8rem 1rem;font-size:.86rem;line-height:1.45;z-index:6;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.nav{position:fixed;bottom:1.6vh;left:0;right:0;display:flex;justify-content:center;align-items:center;gap:.8rem;z-index:5}
+.nav button{border:1px solid var(--line);background:#fff;border-radius:999px;width:2.5rem;height:2.5rem;cursor:pointer;font-size:1rem;color:var(--g3)}
+.count{font-size:.85rem;color:var(--muted);min-width:4rem;text-align:center}
+.pbar{position:fixed;top:0;left:0;height:4px;background:linear-gradient(90deg,var(--g1),var(--g2));transition:width .3s;z-index:5}
+.notes{display:none;position:fixed;right:1rem;bottom:4.8rem;max-width:430px;background:#11231c;color:#e9fbf3;border-radius:12px;padding:.8rem 1rem;font-size:.9rem;line-height:1.45;z-index:6}
 body.show-notes .slide.active .notes{display:block}
-.hint{position:fixed;left:1rem;bottom:1.6vh;font-size:.75rem;color:var(--muted)}
-a{color:var(--g3)}
-/* phone: stack all slides and scroll */
+.hint{position:fixed;left:1rem;bottom:2vh;font-size:.75rem;color:var(--muted)}
 @media (max-width:760px){
   .deck{height:auto;overflow:visible}
-  .slide{position:relative;opacity:1;transform:none;pointer-events:auto;padding:1.4rem 16px 2rem;border-bottom:6px solid #e6f3ed;min-height:auto}
-  .g2,.g3,.g4,.hero{grid-template-columns:minmax(0,1fr)}
-  .hero>*,.grid>*,.card{min-width:0}
-  .card[style*="span"]{grid-column:auto!important}
-  .box,.tools .box,.loop .box{min-width:0}
-  .step{min-width:0;flex:1 1 calc(50% - .5rem)}
-  .tools{min-width:0}
-  .loop{flex-direction:column;align-items:stretch}.loop .arrow{text-align:center}
-  .nav,.hint,.bar{display:none}
-  .big{font-size:2rem}
+  .slide{position:relative;opacity:1;pointer-events:auto;padding:1.5rem 16px 2.2rem;border-bottom:6px solid var(--gl)}
+  .cols,.hero,.who,.mrow{grid-template-columns:minmax(0,1fr)}
+  .words{grid-template-columns:1fr 1fr}
+  .flow{flex-direction:column;align-items:stretch}.flow .a{text-align:center;transform:rotate(90deg)}
+  .nav,.hint,.pbar{display:none}
 }
 </style>
 </head>
 <body>
-<div class="bar" id="bar"></div>
-<main class="deck" id="deck">
+<div class="pbar" id="pbar"></div>
+<main class="deck">
 
-<!-- 1 -->
-<section class="slide" data-min="5">
+<!-- 1 · Welcome -->
+<section class="slide">
+  <div class="head"><img src="avni-logo.png" alt="Avni"><div class="steps"><span class="on">Today</span></div></div>
   <div class="hero">
     <div>
-      <img class="logo" src="avni-logo.png" alt="Avni">
-      <div class="kicker">Hands-on session · 1 hour</div>
-      <h1>Build Avni reports with AI agents: fast, correct, cheap</h1>
-      <p class="muted">Metabase · Superset · Jasper. Everything we learned from ~20 orgs and dozens of report tickets, packed into one repo that Claude Code, Cursor, Codex and Grok can read.</p>
-      <p><span class="pill">8 skills</span><span class="pill">47 filter &amp; drill fixes</span><span class="pill">10 SQL patterns</span><span class="pill">schema dump</span><span class="pill">self-learning</span></p>
-      <p class="mono muted">github.com/siddharthr29/reporting-skills-avni</p>
+      <h1>Build your first Avni report with Claude</h1>
+      <p class="lead">A client asks for a report. By the end of this hour you'll know how to turn that request into a working report. Claude writes the technical parts. <b>You explain, guide and check.</b></p>
+      <div class="quote">"We want to see <b>how many children are registered in each village</b>. We should be able to <b>pick a village</b>, and <b>click the number to see the list of children</b>."<small>The request we'll build together today</small></div>
+      <div class="journey">
+        <div>1 · Explain<span>tell Claude the ask</span></div>
+        <div>2 · Find<span>see the numbers</span></div>
+        <div>3 · Build<span>create the report</span></div>
+        <div>4 · Check<span>test like the client</span></div>
+        <div>5 · Deliver<span>reply + save learnings</span></div>
+      </div>
     </div>
-    <div>
-      <h3>One database, three front-ends</h3>
-      <div class="arch" style="flex-direction:column">
-        <div class="box"><b>Avni app → OLTP <code>public</code></b><span>jsonb observations, RLS per org</span></div>
-        <div class="arrow">↓ ETL every ~90 min</div>
-        <div class="box g"><b>Per-org flat ETL schema</b><span>one column per concept · <code>_coded</code> for multi-selects</span></div>
-        <div class="arrow">↓ same SQL</div>
-        <div class="tools" style="flex-direction:row">
-          <div class="box"><b>Metabase</b><span>primary</span></div>
-          <div class="box"><b>Superset</b><span>some orgs</span></div>
-          <div class="box"><b>Jasper</b><span>legacy</span></div>
+    <div class="mock" aria-label="What the finished report looks like">
+      <div class="bar"><i></i><i></i><i></i>&nbsp;Children by village · Metabase</div>
+      <div class="body">
+        <div class="filt">Village <b>▾ All</b></div>
+        <div class="mrow">
+          <div class="num"><div class="v">1,248</div><div class="l">Children registered</div><span class="hand">👆</span></div>
+          <div class="bars">
+            <div><span>Village A</span><i style="width:80%"></i></div>
+            <div><span>Village B</span><i style="width:62%"></i></div>
+            <div><span>Village C</span><i style="width:45%"></i></div>
+            <div><span>Village D</span><i style="width:30%"></i></div>
+          </div>
         </div>
+        <div class="list"><div><span>Child</span><span>Village</span><span>Registered</span></div>
+          <div><span>Child 1</span><span>Village A</span><span>12 Jan</span></div>
+          <div><span>Child 2</span><span>Village A</span><span>3 Feb</span></div></div>
       </div>
     </div>
   </div>
-  <aside class="notes">Open with the pain: drills that show everyone, dropdowns that are text boxes, downloads that time out, agents re-learning the schema every session. The architecture point that matters: <b>SQL is the same in all three tools</b>. Only the wiring differs. Reports lag the app by up to ~90 min.</aside>
+  <aside class="notes">Set expectations: nobody needs to know SQL today. The skill is asking Claude clearly and checking its work. The finished report on the right is our goal. Keep coming back to it.</aside>
 </section>
 
-<!-- 2 -->
-<section class="slide" data-min="8">
-  <div class="top"><div class="kicker">Setup</div><span class="time">8 min</span></div>
-  <h2>Ten minutes to a working setup, and a schema the agent can grep</h2>
-  <div class="grid g2">
+<!-- 2 · How it works -->
+<section class="slide">
+  <div class="head"><img src="avni-logo.png" alt="Avni"><div class="steps"><span class="on">How it works</span></div></div>
+  <h2>How Avni reports work, in one picture</h2>
+  <div class="flow">
+    <div class="n"><div class="e">📱</div><b>Field worker</b><span>enters data in the Avni app</span></div><div class="a">→</div>
+    <div class="n"><div class="e">🗄️</div><b>Report copy</b><span>copied for reports every ~1.5 hours</span></div><div class="a">→</div>
+    <div class="n"><div class="e">📊</div><b>Metabase</b><span>the website where reports live</span></div><div class="a">→</div>
+    <div class="n"><div class="e">🙂</div><b>Client</b><span>opens the report link</span></div>
+  </div>
+  <div class="words">
+    <div class="card"><b>Card</b><span>One number, chart or table</span></div>
+    <div class="card"><b>Dashboard</b><span>A page with several cards</span></div>
+    <div class="card"><b>Filter</b><span>A dropdown to narrow it down, e.g. pick a village</span></div>
+    <div class="card"><b>Click-through</b><span>Click a number to see the list behind it</span></div>
+  </div>
+  <div class="who">
+    <div class="card"><h3>Claude does</h3><p>Finds where the data is, writes the query, builds the card, runs the checks, drafts the reply.</p></div>
+    <div class="card"><h3>You do</h3><p>Explain what the client wants, answer Claude's questions, <b>check the numbers make sense</b>, approve changes.</p></div>
+  </div>
+  <aside class="notes">Two things to remember. (1) We only ever READ data; we can't break the app. (2) Reports can be up to ~1.5 hours behind the app. That's normal, not a bug.</aside>
+</section>
+
+<!-- 3 · Setup -->
+<section class="slide">
+  <div class="head"><img src="avni-logo.png" alt="Avni"><div class="steps"><span class="on">Get ready</span><span>1 Explain</span><span>2 Find</span><span>3 Build</span><span>4 Check</span><span>5 Deliver</span></div></div>
+  <h2>Get ready (one time, about 10 minutes)</h2>
+  <div class="cols">
     <div>
-<pre><span class="c"># 1. get the pack</span>
-git clone github.com/siddharthr29/reporting-skills-avni
-cd reporting-skills-avni && cp tools/.env.example tools/.env
-
-<span class="c"># 2. read-only tunnel — proves a write FAILS</span>
-./tools/tunnel.sh up
-<span class="k">  ✓ tunnel up · ✓ read-only proven</span>
-
-<span class="c"># 3. dump ONE org's schema locally (planner stats, no table scans)</span>
-./tools/dump_org_schema.sh sangwari
-<span class="k">  ✓ schemas/sangwari/ddl.sql · ✓ CATALOG.md</span>
-
-<span class="c"># 4. open your agent in the repo</span>
-claude    <span class="c"># or cursor / codex — they all read AGENTS.md</span></pre>
+      <ol>
+        <li>Get the <b>reporting-skills-avni</b> folder and the <b>settings file</b> from your lead. The settings file is like a key: never share it.</li>
+        <li>Open <b>Terminal</b> in that folder and type <code>claude</code></li>
+        <li>Paste the message on the right.</li>
+      </ol>
+      <div class="tip"><p><b>If Claude asks permission</b> to run something, read what it says, then allow it. If it gives you a line starting with <code>!</code>, copy and paste it. That's you approving the change.</p></div>
     </div>
-    <div class="card accent">
-      <h3>Why the catalogue saves tokens</h3>
-      <p>Instead of 20+ <code>information_schema</code> round-trips per session, the agent greps one compact file (illustrative excerpt):</p>
-<pre>## individual_child_growth_monitoring (~1,756,119 rows)
-"Weight" numeric ~12% null · "Height" numeric ·
-"Weight for age Status" text [Normal|MUW|SUW] · …
-## session_coded (~9,412 rows) — coded EAV: one row per answer
-## class_session … "Students present" text UUID-array</pre>
-      <ul>
-        <li>Coded values, empty columns, UUID arrays and <code>_coded</code> tables are <b>flagged for you</b></li>
-        <li>Gitignored: never committed. Re-dump on "column does not exist"</li>
-      </ul>
-    </div>
-  </div>
-  <aside class="notes">Do this live on a UAT schema. Point out the read-only proof: the tunnel refuses to continue if a write succeeds. Show one grep: <code>grep -n -i weight schemas/…/CATALOG.md</code>. The file is gitignored because coded values are real data.</aside>
-</section>
-
-<!-- 3 -->
-<section class="slide" data-min="8">
-  <div class="top"><div class="kicker">Workflow</div><span class="time">8 min</span></div>
-  <h2>The workflow every agent follows (it's in AGENTS.md)</h2>
-  <div class="pipe">
-    <div class="step"><i>1</i><b>Intake</b><div>grain, definitions, filters, drills, in one round</div></div>
-    <div class="step"><i>2</i><b>Catalogue</b><div>grep CATALOG.md, not the DB</div></div>
-    <div class="step"><i>3</i><b>Pattern</b><div>start from <code>sql/patterns</code></div></div>
-    <div class="step"><i>4</i><b>Build</b><div>API, patch in place, backup first</div></div>
-    <div class="step"><i>5</i><b>QA</b><div>metric = drill, identities, timing</div></div>
-    <div class="step"><i>6</i><b>Handover</b><div>claim only what's verified</div></div>
-    <div class="step learn"><i>7</i><b>Learn</b><div><code>/learn</code> → LEARNINGS.md</div></div>
-  </div>
-  <div class="grid g2">
     <div>
-      <h3>Prompts that work</h3>
-      <div class="prompt">"Using the avni-reporting skill, fill the intake for this ticket, then tell me the tables from CATALOG.md. <b>Don't query yet.</b>"</div>
-      <div class="prompt">"Build the card from the base-CTE shape with Block and Date filters, apply the dropdown recipe, and give me a per-metric drill. Dry-run first."</div>
-      <div class="prompt">"Run report-qa: metric vs drill for every card, identity check, cold/warm timing. Show me the numbers."</div>
-    </div>
-    <div class="card accent">
-      <h3>Golden rules</h3>
-      <ul>
-        <li><b>Prod is read-only.</b> No DDL, no indexes, no writes</li>
-        <li><b>Patch in place.</b> Never recreate: links are bookmarked</li>
-        <li><b>Reuse template tags</b> when changing card SQL</li>
-        <li><b>Back up</b> before every PUT (tools do it)</li>
-        <li><b>Read the whole ticket</b>: Freshdesk pages at 10 messages</li>
-        <li><b>Prove, then claim</b></li>
-      </ul>
+      <div class="prompt"><span class="lbl">You type</span><button class="copy">Copy</button>Set me up for reporting: open the read-only connection and download the data map for <em>&lt;org name&gt;</em>. Tell me in simple words when it's ready.</div>
+      <div class="chat" style="margin-top:1rem">
+        <div class="msg c"><b class="who">Claude</b>✓ Connected. <b>Read-only:</b> I can look at data but can't change anything.<br>✓ Data map saved. It lists every table and column for this NGO, so I don't have to guess.</div>
+      </div>
     </div>
   </div>
-  <aside class="notes">Emphasise step 1: most rework came from a definition we didn't pin down (enrolled vs registered, roster vs attendance). Step 7 is how the pack improves: every session ends with a learning check.</aside>
+  <div class="check"><span class="t">✓ Ready when</span><p>Claude says <b>read-only</b> and <b>data map saved</b>. If it can't connect, ask your lead to check your settings file.</p></div>
+  <aside class="notes">Do this on the projector once, then let everyone do it. Common problem: the settings file is missing or in the wrong folder. Claude will say so in plain words.</aside>
 </section>
 
-<!-- 4 -->
-<section class="slide" data-min="7">
-  <div class="top"><div class="kicker">Data model</div><span class="time">7 min</span></div>
-  <h2>Eight data traps that caused real tickets</h2>
-  <div class="grid g4">
-    <div class="card"><h3>1 · Voided rows</h3><p><code>is_voided=false</code> on every join, <i>except</i> "people who left": exits void the membership link.</p></div>
-    <div class="card"><h3>2 · Multi-selects</h3><p><code>ILIKE '%Baseline%'</code> matched "Baseline, Other". Use the <code>_coded</code> table.</p></div>
-    <div class="card"><h3>3 · UUID arrays</h3><p>Attendance and pickers are JSON UUID lists. Unnest and join to names, never show UUIDs.</p></div>
-    <div class="card"><h3>4 · Double counts</h3><p>One person in 2 groups → counted twice (21,761 vs 21,525). <code>DISTINCT ON</code>.</p></div>
-    <div class="card"><h3>5 · Roster vs activity</h3><p>INNER JOIN on attendance showed 173 of 200 children. LEFT JOIN + status filter.</p></div>
-    <div class="card"><h3>6 · Latest non-null</h3><p>Latest <i>row</i> said "not recovered". The latest <i>value</i> said recovered: 0/0/1 → 2/1/14.</p></div>
-    <div class="card"><h3>7 · NULL dates</h3><p>NULL <code>encounter_date_time</code> = scheduled. Cancelled ≠ done. NULL months can't be drilled.</p></div>
-    <div class="card"><h3>8 · Stale schema</h3><p><code>"WEIGHT"</code>→<code>"Weight"</code> broke 6 cards. Re-dump, then <code>sync_schema</code> in Metabase.</p></div>
-  </div>
-  <aside class="notes">Each card is a real org: Gubbachi (voided exits), Durga (multi-select), Khel Mel (roster), Maitrayana (double count), Sangwari (latest non-null, WEIGHT rename). The full list of 18 traps is in skills/avni-etl-data-model.</aside>
-</section>
-
-<!-- 5 -->
-<section class="slide" data-min="10">
-  <div class="top"><div class="kicker">Filters &amp; drill-downs</div><span class="time">10 min</span></div>
-  <h2>Two recipes that fix most filter and drill tickets</h2>
-  <div class="grid g2">
-    <div class="card accent">
-      <h3>Dropdown, not a text box: set <u>both</u> levels</h3>
-<pre><span class="c">// dashboard parameter</span>
-"values_query_type": "list", "values_source_type": "card"
-<span class="c">// card template tag (kebab-case) AND card parameters[] (snake_case)</span>
-"values-query-type": "list", "values-source-type": "card",
-"values-source-config": {"card_id": &lt;VALUES_CARD&gt;, "value_field": [...]}</pre>
-      <p class="muted">Only the dashboard set → the card page is still free text. The values card excludes voided rows.</p>
-      <h3 style="margin-top:.6em">Filter "does nothing" on a card?</h3>
-      <p>The card has no tag or mapping for it, so it is <b>silently ignored</b>. Run <code>mb.py dash &lt;id&gt;</code> to list unmapped filters.</p>
-    </div>
-    <div class="card accent">
-      <h3>Drill shows everyone? One drill card <u>per metric</u></h3>
-<pre>drill = <span class="k">same base CTE</span> + <span class="k">metric's condition</span> + <span class="k">same dedup</span>
-click_behavior → targetId: &lt;DRILL&gt;
-  target: {"type": <span class="w">"variable"</span>, "id": "block"}   <span class="c">// not "parameter"</span>
-  pass EVERY dashboard filter through</pre>
-      <h3>The 60-second drill test</h3>
-      <p>Metric with Block = X → click → count rows. <b class="good">Equal = done.</b> Not equal → <code>EXCEPT ALL</code> the two row sets.</p>
-      <p class="muted">Also: read cards via <code>stages[0]</code> (new API shape), reuse tags on edit, <code>(drill) [KEY]</code> names.</p>
+<!-- 4 · Step 1 Explain -->
+<section class="slide">
+  <div class="head"><img src="avni-logo.png" alt="Avni"><div class="steps"><span class="done">Get ready</span><span class="on">1 Explain</span><span>2 Find</span><span>3 Build</span><span>4 Check</span><span>5 Deliver</span></div></div>
+  <h2>Step 1 · Tell Claude what the client wants</h2>
+  <p class="lead">Paste the client's words as they are. Claude will ask the questions that usually cause rework later.</p>
+  <div class="cols">
+    <div class="prompt"><span class="lbl">You type</span><button class="copy">Copy</button>Read AGENTS.md. A client from <em>&lt;org name&gt;</em> asked: "<em>We want to see how many children are registered in each village, pick a village, and click the number to see the list.</em>" Fill in the requirement form and ask me anything that's unclear before building.</div>
+    <div class="chat">
+      <div class="msg c"><b class="who">Claude</b>Before I build, three questions:<ul><li>Should children who <b>left the programme</b> be counted?</li><li>Village of the <b>child</b> or of the <b>household</b>?</li><li>Which <b>dashboard</b> should this go on?</li></ul></div>
+      <div class="msg y"><b class="who">You</b>Only children still in the programme. The child's village. Put it in our practice folder for now.</div>
     </div>
   </div>
-  <aside class="notes">Demo: open a card whose filter is a text box, run mb.py card, and show the missing tag-level setting. Then the drill: Gubbachi "Absent shows Present", Sangwari's 105 generated drills. All 47 cases are in playbooks/filter-issues.md and drilldown-issues.md.</aside>
+  <div class="check"><span class="t">✓ Move on when</span><p>Every question is answered. <b>Don't know an answer? Ask your lead or the client.</b> Don't guess. A wrong guess here means rebuilding later.</p></div>
+  <aside class="notes">This is the most important step. Most rework we've had came from one unclear word, like "registered" vs "enrolled". Show the filled form in templates/requirement-intake.md if there's time.</aside>
 </section>
 
-<!-- 6 -->
-<section class="slide" data-min="7">
-  <div class="top"><div class="kicker">Superset &amp; Jasper</div><span class="time">7 min</span></div>
-  <h2>Superset and Jasper: what's different</h2>
-  <div class="grid g2">
-    <div class="card accent">
-      <h3>Superset</h3>
-      <ul>
-        <li>Login + <b>CSRF token with a cookie jar</b> on every write</li>
-        <li>Datasets are virtual SQL, <b>computed in full</b> before filters and RLS apply</li>
-        <li>SQL changed? <b>Refresh the columns</b> or you get <code>X__1 does not exist</code></li>
-        <li>Charts need <code>query_context</code> (400 otherwise). Link from the <b>chart</b> side</li>
-        <li>Native filters live in <code>native_filter_configuration</code>. Clone one, keep the rest</li>
-        <li>Drill = cross-filters. <b>60s timeout</b> kills downloads</li>
-        <li>RLS rules on a dataset <b>AND-combine</b></li>
-      </ul>
+<!-- 5 · Step 2 Find -->
+<section class="slide">
+  <div class="head"><img src="avni-logo.png" alt="Avni"><div class="steps"><span class="done">Get ready</span><span class="done">1 Explain</span><span class="on">2 Find</span><span>3 Build</span><span>4 Check</span><span>5 Deliver</span></div></div>
+  <h2>Step 2 · See the numbers before building anything</h2>
+  <p class="lead">Claude finds the data and shows you the result. Nothing is created yet. This is where you catch mistakes early.</p>
+  <div class="cols">
+    <div>
+      <div class="prompt"><span class="lbl">You type</span><button class="copy">Copy</button>Using the data map, find where children and their villages are stored and explain it in simple words. Then show me the number of children per village (top 10) and the total. Don't create anything yet.</div>
+      <div class="tip"><p><b>Number looks wrong?</b> Just ask: <i>"The app shows 1,300 but you show 1,248. Why could that be?"</i> Claude knows the usual reasons: deleted records, children who left, data not copied over yet.</p></div>
     </div>
-    <div class="card accent">
-      <h3>Jasper (legacy): diagnose + safe edit</h3>
-      <ul>
-        <li>Same ETL SQL, inside JRXML <code>&lt;queryString&gt;</code></li>
-        <li><code>$P{x}</code> bound · <code>$P!{x}</code> spliced raw (location RLS)</li>
-        <li>Debug: extract the SQL, substitute params, run it read-only</li>
-        <li>Edit: export/download → change the text → Studio for layout → <b>a human uploads</b> (auto-versioned)</li>
-        <li>Reports are copied per level × fiscal year, so patch <b>all</b> copies</li>
-      </ul>
-      <p class="muted">RWB example: one new column meant 8 JRXMLs, each verified read-only.</p>
+    <div class="chat">
+      <div class="msg c"><b class="who">Claude</b>Children are in the <b>child register</b>, and each child's <b>village</b> comes from their address. I've left out deleted records and children who left.<br><br>Village A · 212 &nbsp; Village B · 164 &nbsp; Village C · 118 …<br><b>Total: 1,248 children</b></div>
+      <div class="msg y"><b class="who">You</b>Village A looks right, the field team said about 200. Go ahead.</div>
     </div>
   </div>
-  <aside class="notes">If the org asks for something new in Jasper, steer them to Metabase or Superset. For Superset, the two things that bite most are query_context and the column refresh.</aside>
+  <div class="check"><span class="t">✓ Move on when</span><p>The total is close to what the <b>app</b> or the <b>client</b> expects, and any difference has a reason you understand.</p></div>
+  <aside class="notes">Teach the habit: compare with something real (the app, the client's Excel, the field team). If Claude can't explain a difference in simple words, stop and ask your lead.</aside>
 </section>
 
-<!-- 7 -->
-<section class="slide" data-min="7">
-  <div class="top"><div class="kicker">Speed &amp; safety</div><span class="time">7 min</span></div>
-  <h2>Prove it's the same data, then make it fast</h2>
-  <div class="grid g3">
-    <div class="card accent" style="grid-column:span 2">
-      <h3>APF Odisha: "the line list won't download"</h3>
-      <p>A permission fix didn't solve it. The first idea (an infra index) would have been a <b>needless escalation</b>. The real cause was a CTE sorting <b>1.6M rows</b> on every load whose columns were <b>never selected</b>.</p>
-      <p><span class="big bad">2–5 min</span> <span class="big" style="color:var(--muted)">→</span> <span class="big good">0.8 s</span></p>
-<pre><span class="k">with</span> a <span class="k">as materialized</span> (&lt;old&gt;), b <span class="k">as materialized</span> (&lt;new&gt;)
-<span class="k">select</span> count(a), count(b), a <span class="w">EXCEPT ALL</span> b, b <span class="w">EXCEPT ALL</span> a   <span class="c">-- 68,577 · 68,577 · 0 · 0 ✓</span></pre>
-      <p class="muted"><code>tools/qa.py except-all old.sql new.sql</code></p>
+<!-- 6 · Step 3 Build -->
+<section class="slide">
+  <div class="head"><img src="avni-logo.png" alt="Avni"><div class="steps"><span class="done">Get ready</span><span class="done">1 Explain</span><span class="done">2 Find</span><span class="on">3 Build</span><span>4 Check</span><span>5 Deliver</span></div></div>
+  <h2>Step 3 · Build the report</h2>
+  <p class="lead">Ask for a plan first. Claude shows exactly what it will create, and only builds it after you say yes.</p>
+  <div class="cols">
+    <div>
+      <div class="prompt"><span class="lbl">You type</span><button class="copy">Copy</button>Create this report in our practice folder: the total number, a bar chart by village, a <em>Village dropdown filter</em>, and make the number <em>clickable to show the list of children</em>. Show me the plan first.</div>
+      <div class="tip"><p><b>Golden rule:</b> practise in the <b>practice folder</b>. Never change a client's live report without your lead.</p></div>
+      <p style="margin:.8rem 0 0">Asked to paste a line starting with <code>!</code>? Do it. That's your approval.</p>
     </div>
+    <div class="chat">
+      <div class="msg c"><b class="who">Claude</b>Plan:<ul><li>3 cards: the total (clickable), a bar chart by village, the list of children</li><li>A Village dropdown that controls all 3</li></ul>Shall I create them? (Nothing changed yet.)</div>
+      <div class="msg y"><b class="who">You</b>Yes, go ahead.</div>
+      <div class="msg c"><b class="who">Claude</b>✓ Done. Here's your report: <u>link</u></div>
+    </div>
+  </div>
+  <div class="check"><span class="t">✓ Move on when</span><p>You have a <b>link</b> and the report opens.</p></div>
+  <aside class="notes">Point out "show me the plan first". It's the safety habit. Claude also saves a backup before changing anything, so mistakes can be undone.</aside>
+</section>
+
+<!-- 7 · Step 4 Check -->
+<section class="slide">
+  <div class="head"><img src="avni-logo.png" alt="Avni"><div class="steps"><span class="done">Get ready</span><span class="done">1 Explain</span><span class="done">2 Find</span><span class="done">3 Build</span><span class="on">4 Check</span><span>5 Deliver</span></div></div>
+  <h2>Step 4 · Check it like the client would</h2>
+  <p class="lead">Open the link yourself and click around. Five checks catch almost every problem we've seen.</p>
+  <div class="cols">
     <div class="card">
-      <h3>Fixes, in order to try</h3>
-      <ol style="padding-left:1.1em;margin:.2em 0">
-        <li>Delete dead CTEs</li>
-        <li><code>AS MATERIALIZED</code> (103s → 1.1s)</li>
-        <li>Materialised concept lookup (41s → 0.7s)</li>
-        <li>LATERAL top-1 per entity</li>
-        <li>ETL tables, not <code>public.*_view</code></li>
-        <li><code>LIMIT 2000</code> on line lists</li>
-      </ol>
-      <p class="muted">No DDL on prod, ever.</p>
-    </div>
-  </div>
-  <aside class="notes">The story is the lesson: check access AND timeout (they look identical to users), prove before escalating, and never ship a rewrite without EXCEPT ALL = 0 both ways.</aside>
-</section>
-
-<!-- 8 -->
-<section class="slide" data-min="8">
-  <div class="top"><div class="kicker">Your turn</div><span class="time">8 min + labs</span></div>
-  <h2>Hands-on, and a pack that keeps learning</h2>
-  <div class="grid g2">
-    <div class="card accent">
-      <h3>Labs (on a UAT schema, ~20 min each)</h3>
-      <ol style="padding-left:1.1em">
-        <li><b>First filtered card</b>: tunnel, dump, dropdown recipe</li>
-        <li><b>Fix a drill</b>: metric 14, drill 300+ → per-metric drill, proven equal</li>
-        <li><b>Fast and identical</b>: dead CTE + multi-select trap, <code>EXCEPT ALL</code></li>
-      </ol>
-      <p><a href="https://github.com/siddharthr29/reporting-skills-avni/tree/main/labs">labs/</a> · <a href="https://github.com/siddharthr29/reporting-skills-avni/tree/main/playbooks">playbooks/</a> · <a href="https://github.com/siddharthr29/reporting-skills-avni/blob/main/AGENTS.md">AGENTS.md</a></p>
-    </div>
-    <div class="card accent">
-      <h3>Every task makes the pack smarter</h3>
-      <div class="loop">
-        <div class="box"><b>Capture</b><span><code>/learn</code> · add_learning.py</span></div><div class="arrow">→</div>
-        <div class="box"><b>Curate</b><span><code>/curate</code> weekly</span></div><div class="arrow">→</div>
-        <div class="box g"><b>Promote</b><span>skills · playbooks · evals</span></div>
-      </div>
-      <ul>
-        <li>Works for Claude Code, Cursor, Codex and Copilot (AGENTS.md + rules)</li>
-        <li>The safety scan <b>refuses</b> secrets, emails, hosts and raw IDs</li>
-        <li>Wrong advice → fix the skill <b>and</b> add an eval so it can't return</li>
+      <ul class="plain">
+        <li>It <b>opens within a few seconds</b></li>
+        <li>The filter is a <b>dropdown</b> (not a box you type in), and picking a village <b>changes the numbers</b></li>
+        <li>Click the number: the list has the <b>same count</b> as the number (212 → 212 rows)</li>
+        <li>All villages <b>add up</b> to the total</li>
+        <li>No strange codes like <code>3f2a9c1e-…</code> in the list</li>
       </ul>
     </div>
+    <div>
+      <div class="prompt"><span class="lbl">Then you type</span><button class="copy">Copy</button>Run the checks on this report and tell me in simple words if anything is wrong.</div>
+      <div class="tip"><p><b>Something's off? Describe what you see, in plain words:</b><br>"When I click 212, the list shows everyone."<br>"The village filter is a typing box."<br>Claude looks up how that problem was fixed before, and fixes it.</p></div>
+    </div>
   </div>
-  <aside class="notes">Split into pairs for the labs. Before anyone leaves: run /learn once, even if nothing is new, so the habit sticks. Point to evals/ for testing a new model.</aside>
+  <div class="check"><span class="t">✓ Move on when</span><p>All five boxes are ticked, and Claude's checks say everything matches.</p></div>
+  <aside class="notes">These five checks map to the most common tickets we've had: slow reports, text-box filters, clicks showing the wrong list, totals that don't add up, raw IDs. Interns don't need to know why. They need to notice.</aside>
+</section>
+
+<!-- 8 · Step 5 Deliver + your turn -->
+<section class="slide">
+  <div class="head"><img src="avni-logo.png" alt="Avni"><div class="steps"><span class="done">Get ready</span><span class="done">1 Explain</span><span class="done">2 Find</span><span class="done">3 Build</span><span class="done">4 Check</span><span class="on">5 Deliver</span></div></div>
+  <h2>Step 5 · Deliver, and help the next person</h2>
+  <div class="cols">
+    <div>
+      <div class="prompt"><span class="lbl">You type</span><button class="copy">Copy</button>Write a short, friendly reply to the client: what we built, how to use the village filter, and the link. Only mention what we checked.</div>
+      <div class="prompt" style="margin-top:.9rem"><span class="lbl">Then type</span><button class="copy">Copy</button>/learn</div>
+      <p style="margin-top:.6rem"><b>/learn</b> saves anything new Claude found today, so the next person, and the next Claude, doesn't hit the same problem.</p>
+    </div>
+    <div class="card" style="border-top:6px solid var(--g1)">
+      <h3>Your turn · 20 minutes, in pairs</h3>
+      <p>Build this for the <b>practice NGO</b>, using the same 5 steps:</p>
+      <div class="quote" style="margin:.6rem 0">"How many <b>home visits</b> happened <b>each month</b>? Let us pick a <b>month</b>, and click to see the visits."</div>
+      <p style="margin:.3rem 0">Stuck? Ask Claude: <i>"Which playbook covers this problem?"</i> Or open <b>START-HERE.md</b>.</p>
+    </div>
+  </div>
+  <div class="check"><span class="t">✓ Done when</span><p>Your report passes the 5 checks, your lead has seen the reply, and you've typed <b>/learn</b>.</p></div>
+  <aside class="notes">Walk around during the exercise. The most common mistakes: skipping step 2 (not looking at the numbers) and not clicking through in step 4. Close by asking two pairs to show their report.</aside>
 </section>
 
 </main>
 <nav class="nav" aria-label="Slide navigation">
-  <button id="prev" aria-label="Previous slide">←</button>
-  <span class="count" id="count">1 / 8</span>
-  <button id="next" aria-label="Next slide">→</button>
+  <button id="prev" aria-label="Previous slide">←</button><span class="count" id="count"></span><button id="next" aria-label="Next slide">→</button>
 </nav>
 <div class="hint">← → to move · N for speaker notes</div>
 <script>
 (function(){
-  const slides=[...document.querySelectorAll('.slide')], bar=document.getElementById('bar'), count=document.getElementById('count');
+  const slides=[...document.querySelectorAll('.slide')],pbar=document.getElementById('pbar'),count=document.getElementById('count');
   let i=Math.max(0,Math.min(slides.length-1,(parseInt(location.hash.slice(1),10)||1)-1));
   function show(n){i=(n+slides.length)%slides.length;slides.forEach((s,k)=>s.classList.toggle('active',k===i));
-    count.textContent=(i+1)+' / '+slides.length;bar.style.width=((i+1)/slides.length*100)+'%';
-    history.replaceState(null,'','#'+(i+1));}
-  document.getElementById('prev').onclick=()=>show(i-1);
-  document.getElementById('next').onclick=()=>show(i+1);
-  addEventListener('keydown',e=>{
-    if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();show(i+1);}
+    count.textContent=(i+1)+' / '+slides.length;pbar.style.width=((i+1)/slides.length*100)+'%';history.replaceState(null,'','#'+(i+1));}
+  document.getElementById('prev').onclick=()=>show(i-1);document.getElementById('next').onclick=()=>show(i+1);
+  addEventListener('keydown',e=>{if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();show(i+1);}
     else if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();show(i-1);}
-    else if(e.key==='Home')show(0); else if(e.key==='End')show(slides.length-1);
     else if(e.key==='n'||e.key==='N')document.body.classList.toggle('show-notes');});
   let x0=null;addEventListener('touchstart',e=>x0=e.touches[0].clientX,{passive:true});
   addEventListener('touchend',e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>50)show(i+(dx<0?1:-1));x0=null;});
+  document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
+    const t=b.parentElement.cloneNode(true);t.querySelectorAll('.lbl,.copy').forEach(x=>x.remove());
+    const txt=t.textContent.trim();
+    (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>{b.textContent='Copied ✓';setTimeout(()=>b.textContent='Copy',1500);})
+      .catch(()=>{b.textContent='Select & copy';});}));
   show(i);
 })();
 </script>

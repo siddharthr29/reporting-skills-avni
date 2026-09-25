@@ -8,6 +8,8 @@
   mb.py dash <id>                                  dashboard: params, cards, parameter mappings, click behaviours
   mb.py run --db <DB_ID> ("<sql>" | -f file.sql)   run SQL through Metabase (optional [[ ]] blocks stripped)
   mb.py set-sql <card_id> -f new.sql [--apply]     patch a card's SQL IN PLACE, keeping template tags + params
+  mb.py create-card --name N --collection C --db D -f q.sql [--display scalar|table|bar] [--apply]
+                                                   new card (SQL validated in Metabase first; dry-run default)
   mb.py sync <db_id> [--values] [--apply]          sync_schema (and rescan_values)
   mb.py backup (card|dashboard) <id>
 """
@@ -116,6 +118,33 @@ def cmd_set_sql(api, a):
           f"tags={sorted(chk_tags)}")
 
 
+def cmd_create_card(api, a):
+    sql = open(a.file).read()
+    tags = {}
+    for v in template_vars(sql):
+        is_date = "date" in v
+        tags[v] = {"id": str(uuid.uuid4()), "name": v, "display-name": v.replace("_", " ").title(),
+                   "type": "date" if is_date else "text"}
+    body = {"name": a.name, "collection_id": a.collection, "display": a.display, "description": a.description,
+            "visualization_settings": {},
+            "dataset_query": {"type": "native", "database": a.db, "native": {"query": sql, "template-tags": tags}}}
+    if a.display == "bar":
+        print("! bar charts also need visualization_settings graph.dimensions/metrics — set after creation")
+    print(f"Will create card {a.name!r} in collection {a.collection} on database {a.db} as {a.display}; "
+          f"filters: {list(tags) or 'none'}")
+    # Validate the SQL runs (filters stripped) before creating anything.
+    probe = strip_optional(sql)
+    if not template_vars(probe):
+        r = api.post("/dataset", {"database": a.db, "type": "native", "native": {"query": probe}})
+        if r.get("error"):
+            die(f"SQL fails in Metabase: {str(r['error'])[:400]}")
+        print(f"✓ SQL runs in Metabase ({r.get('row_count')} rows unfiltered)")
+    if not a.apply:
+        print("DRY-RUN. Re-run with --apply to create it."); return
+    c = api.post("/card", body)
+    print(f"✓ created card #{c['id']}  {ENV.get('METABASE_URL', '').rstrip('/')}/question/{c['id']}")
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sp = ap.add_subparsers(dest="cmd", required=True)
@@ -128,6 +157,10 @@ def main():
     p.add_argument("-f", "--file"); p.add_argument("--limit", type=int, default=20)
     p = sp.add_parser("set-sql"); p.add_argument("id", type=int); p.add_argument("-f", "--file", required=True)
     p.add_argument("--apply", action="store_true")
+    p = sp.add_parser("create-card"); p.add_argument("--name", required=True); p.add_argument("--collection", type=int, required=True)
+    p.add_argument("--db", type=int, required=True); p.add_argument("-f", "--file", required=True)
+    p.add_argument("--display", default="table", choices=["table", "scalar", "bar", "pie", "line"])
+    p.add_argument("--description", default=None); p.add_argument("--apply", action="store_true")
     p = sp.add_parser("sync"); p.add_argument("id", type=int); p.add_argument("--values", action="store_true")
     p.add_argument("--apply", action="store_true")
     p = sp.add_parser("backup"); p.add_argument("kind", choices=["card", "dashboard"]); p.add_argument("id", type=int)
@@ -151,6 +184,8 @@ def main():
         cmd_run(api, a)
     elif a.cmd == "set-sql":
         cmd_set_sql(api, a)
+    elif a.cmd == "create-card":
+        cmd_create_card(api, a)
     elif a.cmd == "sync":
         steps = ["sync_schema"] + (["rescan_values"] if a.values else [])
         if not a.apply:

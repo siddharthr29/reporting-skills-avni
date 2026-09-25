@@ -10,6 +10,7 @@
 </p>
 
 <p align="center">
+  <a href="START-HERE.md"><b>New here? Start here</b></a> ·
   <a href="https://siddharthr29.github.io/reporting-skills-avni/">▶ Session deck</a> ·
   <a href="AGENTS.md">Agent entry point</a> ·
   <a href="playbooks/">Fix playbooks</a> ·
