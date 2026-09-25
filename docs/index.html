@@ -22,8 +22,10 @@ html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);font-fam
 .slide{position:absolute;inset:0;display:none;flex-direction:column;padding:2.4vh 4vw 0}
 .slide.active{display:flex}
 .sheet{flex:1;display:flex;flex-direction:column;max-width:1240px;width:100%;margin:0 auto;min-height:0}
-.run{display:flex;justify-content:space-between;align-items:center;gap:1rem;border-bottom:1px solid var(--ink);padding-bottom:.55rem;margin-bottom:2vh;font-size:.76rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
-.run img{height:22px;vertical-align:middle;margin-right:.7rem}
+.run{display:flex;justify-content:space-between;align-items:center;gap:1rem;border-bottom:1px solid var(--ink);padding-bottom:.6rem;margin-bottom:2vh;font-size:.76rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.run img{height:38px;width:auto;vertical-align:middle;margin-right:1rem;display:inline-block}
+.run>span:first-child{display:flex;align-items:center;gap:.2rem}
+.slide:first-child .run img{height:48px}
 .run b{color:var(--ink);font-weight:600}
 .run .where span{margin-left:.9rem;white-space:nowrap}
 .run .where span.on{color:var(--ink);font-weight:600;border-bottom:2px solid var(--green);padding-bottom:.15rem}
@@ -61,8 +63,8 @@ ol.do li small{display:block;color:var(--muted);font-size:.86em;margin-top:.15re
 .foot button:hover{text-decoration:underline}
 .note{border:1px solid var(--rule);background:var(--page);padding:.65rem .9rem;margin-top:1rem}
 .note p{margin:0}
-.title{display:grid;grid-template-columns:1.1fr 1fr;gap:4vw;align-items:start;margin-top:1.6vh}
-.brief{border:1.5px solid var(--ink);background:#fff;padding:.9rem 1.1rem;margin:1.2rem 0 0}
+.title{display:grid;grid-template-columns:1.1fr 1fr;gap:4vw;align-items:start;margin-top:.8vh}
+.brief{border:1.5px solid var(--ink);background:#fff;padding:.8rem 1.1rem;margin:.9rem 0 0}
 .brief p{font-family:var(--serif);font-size:clamp(1.02rem,1.45vw,1.28rem);margin:.2rem 0 0}
 .brief p.lbl{font-family:var(--sans);font-size:.72rem;margin:0 0 .3rem}
 table.agenda{border-collapse:collapse;width:100%}
@@ -105,6 +107,9 @@ body.show-notes .slide.active .notes{display:block}
   .body,.title,.proof{grid-template-columns:minmax(0,1fr)}
   .flow{flex-direction:column}.flow div{border-right:0;border-bottom:1px solid var(--rule)}
   .run .where{display:none}
+  .run img{height:34px}
+  .slide:first-child .run img{height:42px}
+  .run{flex-wrap:wrap}
   .foot{position:static}.foot button{display:none}
   .checks{gap:.7rem;margin-top:1rem}
 }
