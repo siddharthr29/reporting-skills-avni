@@ -46,8 +46,9 @@ def main():
     api = login()
 
     if a.cmd == "whoami":
-        me = api.get("/api/v1/me/").get("result", {})
-        print(me.get("username"), "| roles:", list((me.get("roles") or {}).keys()))
+        # /api/v1/me/ needs a browser session (401 with a JWT), so prove access with a token-authorised call.
+        n = api.get("/api/v1/dataset/?q=(page_size:1)").get("count")
+        print(f"logged in as {ENV.get('SUPERSET_USER')} | datasets visible: {n}")
 
     elif a.cmd == "dataset":
         r = api.get(f"/api/v1/dataset/{a.id}")["result"]
@@ -71,6 +72,8 @@ def main():
         meta = json.loads(d.get("json_metadata") or "{}")
         print(f"dashboard #{a.id} {d['dashboard_title']!r} | cross_filters={meta.get('cross_filters_enabled')}")
         for f in meta.get("native_filter_configuration", []):
+            if f.get("type") == "DIVIDER":
+                print(f"  — section: {f.get('title')!r}"); continue
             tg = [(t.get("datasetId"), (t.get("column") or {}).get("name")) for t in f.get("targets", [])]
             print(f"  filter {f.get('name')!r} {f.get('filterType')} targets={tg} charts={len(f.get('chartsInScope') or [])}")
         for c in api.get(f"/api/v1/dashboard/{a.id}/charts").get("result", []):
@@ -90,7 +93,8 @@ def main():
     elif a.cmd == "set-dataset-sql":
         cur = api.get(f"/api/v1/dataset/{a.id}")["result"]
         new = open(a.file).read()
-        show_diff(cur.get("sql") or "", new)
+        if not show_diff(cur.get("sql") or "", new):
+            return
         if not a.apply:
             print(f"\nDRY-RUN. Re-run with --apply. Output columns changing? add --override-columns.")
             return
