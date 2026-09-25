@@ -65,8 +65,12 @@ def backup(kind, oid, obj):
 
 
 def show_diff(old, new, label="sql"):
-    d = "".join(difflib.unified_diff(old.splitlines(True), new.splitlines(True), f"{label} (live)", f"{label} (new)"))
-    print(d or "(no textual change)")
+    """Print a unified diff, ignoring trailing whitespace. Returns True if there is a real change."""
+    a = [l.rstrip() + "\n" for l in old.strip().splitlines()]
+    b = [l.rstrip() + "\n" for l in new.strip().splitlines()]
+    d = "".join(difflib.unified_diff(a, b, f"{label} (live)", f"{label} (new)"))
+    print(d or "(no change — the new SQL is the same as the live SQL)")
+    return bool(d)
 
 
 def strip_optional(sql):

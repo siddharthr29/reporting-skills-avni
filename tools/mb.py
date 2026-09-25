@@ -101,7 +101,8 @@ def cmd_set_sql(api, a):
     for v in added:
         keep[v] = {"id": str(uuid.uuid4()), "name": v, "display-name": v.replace("_", " ").title(), "type": "text"}
     params = [p for p in (c.get("parameters") or []) if p.get("slug") in new_vars]
-    show_diff(old, new)
+    if not show_diff(old, new):
+        return
     if added:
         print(f"! NEW tags (type text — set type/value source, then map on dashboards): {added}")
     if removed:
