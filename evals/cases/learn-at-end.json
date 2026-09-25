@@ -1,0 +1,7 @@
+{
+  "prompt": "We just fixed a drill that ignored the Block filter because the parameterMapping didn't pass it. Anything else to do?",
+  "must_include": [
+    "add_learning"
+  ],
+  "must_not_include": []
+}

@@ -1,0 +1,12 @@
+{
+  "prompt": "Superset users say the child line list won't download, even after we granted datasource access.",
+  "must_include": [
+    "60",
+    "timeout",
+    "EXCEPT ALL"
+  ],
+  "must_not_include": [
+    "create index",
+    "CREATE INDEX"
+  ]
+}

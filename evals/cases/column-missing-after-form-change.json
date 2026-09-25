@@ -1,0 +1,8 @@
+{
+  "prompt": "A Metabase card started failing with 'column \"WEIGHT\" does not exist' today.",
+  "must_include": [
+    "CATALOG",
+    "sync_schema"
+  ],
+  "must_not_include": []
+}

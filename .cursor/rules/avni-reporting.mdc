@@ -1,0 +1,7 @@
+---
+description: Avni reporting (Metabase / Superset / Jasper) — load AGENTS.md and the relevant skill; log learnings at the end
+alwaysApply: true
+---
+Before any Avni reporting work, read `AGENTS.md` at the repo root and follow its golden rules and workflow.
+Load the matching `skills/<name>/SKILL.md` for the tool involved, and `playbooks/` for known symptoms.
+At the end of every task, record anything new or any correction with `python3 tools/add_learning.py` (see `skills/report-learnings/SKILL.md`).

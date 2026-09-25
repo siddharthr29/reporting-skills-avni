@@ -1,0 +1,12 @@
+{
+  "prompt": "On a Metabase dashboard the scalar 'Absent today' shows 12 but clicking it opens the full student list. Why and how do I fix it?",
+  "must_include": [
+    "drill card",
+    "metric",
+    "variable",
+    "row count"
+  ],
+  "must_not_include": [
+    "recreate the dashboard"
+  ]
+}

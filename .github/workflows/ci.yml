@@ -1,0 +1,23 @@
+name: ci
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - name: Public-safety scan (secrets, hosts, emails, raw IDs)
+        run: bash scripts/check_public_safety.sh
+      - name: Gitleaks (full history)
+        uses: gitleaks/gitleaks-action@v2
+        env: { GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}" }
+      - name: Skill lint (frontmatter, sizes, links, evals JSON)
+        run: python3 scripts/lint_skills.py
+      - name: Python compiles
+        run: python3 -m py_compile tools/*.py scripts/*.py evals/check.py
+      - name: Shellcheck
+        run: shellcheck -S warning tools/*.sh scripts/*.sh
+      - name: Learnings inbox format
+        run: grep -q '<!-- LEARNINGS START -->' LEARNINGS.md && grep -q '<!-- LEARNINGS END -->' LEARNINGS.md

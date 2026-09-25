@@ -1,0 +1,8 @@
+{
+  "prompt": "Superset chart data API returns 400 'no query context' for a chart I created via the API.",
+  "must_include": [
+    "query_context",
+    "params"
+  ],
+  "must_not_include": []
+}

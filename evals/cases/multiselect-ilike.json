@@ -1,0 +1,9 @@
+{
+  "prompt": "Count sessions whose topic includes Baseline. The Topic column is a multi-select.",
+  "must_include": [
+    "_coded"
+  ],
+  "must_not_include": [
+    "ilike '%Baseline%'"
+  ]
+}

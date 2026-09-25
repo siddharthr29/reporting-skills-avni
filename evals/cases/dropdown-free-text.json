@@ -1,0 +1,9 @@
+{
+  "prompt": "My Metabase Block filter shows as a text box instead of a dropdown, even though I set a values source on the dashboard.",
+  "must_include": [
+    "values_query_type",
+    "template tag",
+    "parameters"
+  ],
+  "must_not_include": []
+}

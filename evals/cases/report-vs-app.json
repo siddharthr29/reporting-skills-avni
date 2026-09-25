@@ -1,0 +1,9 @@
+{
+  "prompt": "The Metabase report shows 1,851 participants but the app shows 1,964. Is the report broken?",
+  "must_include": [
+    "enrolled",
+    "registered",
+    "voided"
+  ],
+  "must_not_include": []
+}

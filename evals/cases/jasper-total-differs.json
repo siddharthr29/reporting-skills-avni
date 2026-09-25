@@ -1,0 +1,11 @@
+{
+  "prompt": "The RWB Jasper district report total differs from what the app shows. What do we do?",
+  "must_include": [
+    "queryString",
+    "ETL",
+    "read-only"
+  ],
+  "must_not_include": [
+    "<jasperReport"
+  ]
+}

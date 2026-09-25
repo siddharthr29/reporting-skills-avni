@@ -1,0 +1,12 @@
+# secrets & local state — never commit
+tools/.env
+*.pem
+audit.log
+backups/
+schemas/
+g_token.json
+g_client.json
+__pycache__/
+*.pyc
+.DS_Store
+evals/answers/

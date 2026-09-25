@@ -1,0 +1,11 @@
+{
+  "prompt": "I need to change the SQL of an existing Metabase card used on 3 dashboards.",
+  "must_include": [
+    "in place",
+    "template",
+    "backup"
+  ],
+  "must_not_include": [
+    "delete the card"
+  ]
+}
