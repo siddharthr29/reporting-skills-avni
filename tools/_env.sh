@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Shared helpers: load tools/.env and set read-only Postgres connection env. Source, don't run.
 TOOLS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(cd "$TOOLS_DIR/.." && pwd)"
+export REPO_ROOT; REPO_ROOT="$(cd "$TOOLS_DIR/.." && pwd)"   # used by scripts that source this file
 ENV_FILE="${AVNI_REPORTING_ENV:-$TOOLS_DIR/.env}"
 
 log()  { printf '%s\n' "$*" >&2; }
