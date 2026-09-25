@@ -1,5 +1,7 @@
 # Hands-on labs
 
+> Want a full client-style exercise? Use the practice requirement sheet in [`practice/`](../practice/): 14 rows, Durga India UAT data. **Practice only: never change an original client report.**
+
 Do these with your AI agent open in this repo. Use a **practice/UAT schema** your trainer gives you (`<practice_schema>`, e.g. an org's `*_uat` schema) and a **practice collection** in Metabase. Never practise on a client's live dashboard.
 
 | Lab | Time | You'll learn | Solution |

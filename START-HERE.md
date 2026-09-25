@@ -83,6 +83,9 @@ Show it to your lead, then type **`/learn`** so the next person benefits from an
 
 ---
 
+## Practise first
+Use the practice requirement sheet: `practice/durga-india-practice-srs.xlsx` (Durga India **UAT** test data). **Practice only:** build in your own practice folder, and never change an original client report. See `practice/README.md`.
+
 ## Stuck?
 - Ask Claude: *"Which playbook covers this problem?"*
 - Common problems and fixes: `playbooks/`

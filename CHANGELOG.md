@@ -2,6 +2,12 @@
 
 Curated learnings are recorded here when they move from `LEARNINGS.md` into the skills.
 
+## 2026-09-25 — Durga India practice SRS
+- `practice/durga-india-practice-srs.xlsx` (+ .csv): 14-row client-style requirement sheet on Durga India UAT (`durga_uat`), different from the delivered Durga reports; includes deliberate ❓ (P05, P10, P13) and ⛔ (P14) rows. Disclaimer on every tab.
+- `practice/README.md` (disclaimer + how to use), `practice/FACILITATOR-NOTES.md` (answer key with expected numbers).
+- AGENTS.md rule 10: practice mode never touches client reports. Deck now demos P01 and uses the practice sheet in Step 1 and the pair exercise.
+- Fix: `schema_catalog.py` crashed on multi-line common values (free-text answers).
+
 ## 2026-09-25 — workshop deck redesign
 - Deck rebuilt as a hands-on workshop handout (serif headings, ruled layout, no emoji/gradients): every step is a numbered "Do this" list with exact clicks, a "Type exactly" box with copy button, what Claude replies, and tick-boxes.
 - New slide 2 "Why this pack, and not just ask the AI" (side-by-side + real proof). Deck is now 9 slides with a timed agenda.

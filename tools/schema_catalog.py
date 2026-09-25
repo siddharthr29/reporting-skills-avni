@@ -59,7 +59,7 @@ def main():
                           where table_schema = '{s}' order by table_name, ordinal_position"""):
         cols.setdefault(t, []).append((c, dt))
     stats = {(t, c): (float(nf or 0), float(nd or 0), mcv) for t, c, nf, nd, mcv in q(
-        f"""select tablename, attname, null_frac, n_distinct, coalesce(most_common_vals::text,'')
+        f"""select tablename, attname, null_frac, n_distinct, regexp_replace(coalesce(most_common_vals::text,''), E'[\\n\\r\\t]+', ' ', 'g')
             from pg_stats where schemaname = '{s}'""")}
 
     out = [f"# Catalogue: `{s}` — generated {datetime.date.today()}",

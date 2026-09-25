@@ -65,6 +65,7 @@ The agent reads `AGENTS.md`, then `skills/avni-reporting/SKILL.md`, then the cat
 | [`sql/patterns/`](sql/patterns/) | Copy-paste SQL for recurring Avni shapes | Writing SQL |
 | [`tools/`](tools/) | tunnel, schema dump + catalogue, Metabase/Superset clients, QA | Setup + every build |
 | [`templates/`](templates/) | Requirement intake, report spec, handover note, client reply | Start / end of a job |
+| [`practice/`](practice/) | **Practice requirement sheet (Durga India, UAT data)** + facilitator answer key. Practice only: never touch client reports | Training / self-practice |
 | [`labs/`](labs/) | 3 hands-on labs with solutions | Training |
 | [`evals/`](evals/) | Prompts + must-include answers to test an agent | After changing skills |
 | [`docs/`](docs/) | The 9-slide hands-on workshop deck (GitHub Pages) | The session |

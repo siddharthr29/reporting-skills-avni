@@ -61,7 +61,7 @@ ol.do li small{display:block;color:var(--muted);font-size:.86em;margin-top:.15re
 .foot>span{max-width:1240px}
 .foot button{background:none;border:0;font:500 .82rem var(--sans);color:var(--ink);cursor:pointer;padding:.2rem .4rem}
 .foot button:hover{text-decoration:underline}
-.note{border:1px solid var(--rule);background:var(--page);padding:.65rem .9rem;margin-top:1rem}
+.note{border:1px solid var(--rule);background:var(--page);padding:.55rem .9rem;margin-top:.7rem}
 .note p{margin:0}
 .title{display:grid;grid-template-columns:1.1fr 1fr;gap:4vw;align-items:start;margin-top:.8vh}
 .brief{border:1.5px solid var(--ink);background:#fff;padding:.8rem 1.1rem;margin:.9rem 0 0}
@@ -125,13 +125,13 @@ body.show-notes .slide.active .notes{display:block}
     <div>
       <h1>Build your first Avni report with Claude</h1>
       <p class="sub">You explain, guide and check. Claude does the technical work. By the end of the hour you'll have built one real report yourself.</p>
-      <div class="brief"><p class="lbl">The request we'll build</p><p>"Show how many children are registered in each village. Let us pick a village, and click the number to see the list of children."</p></div>
+      <div class="brief"><p class="lbl">The request we'll build · practice sheet row P01</p><p>"How many participants are registered in each location? Let us pick a location, and click the number to see the list."</p></div>
       <div class="wire" aria-label="Sketch of the finished report">
-        <div class="bar">What you'll have by the end: Metabase · Children by village</div>
+        <div class="bar">What you'll have by the end: Metabase · Participants by location (practice)</div>
         <div class="in">
-          <span class="f">Village ▾ All</span>
-          <div class="n"><b>1,248</b><span>children · click to see the list</span></div>
-          <div class="b">Village A<i style="width:88%"></i>Village B<i style="width:66%"></i>Village C<i style="width:44%"></i></div>
+          <span class="f">Location ▾ All</span>
+          <div class="n"><b>1,044</b><span>participants · click to see the list</span></div>
+          <div class="b">Location A<i style="width:88%"></i>Location B<i style="width:66%"></i>Location C<i style="width:44%"></i></div>
         </div>
       </div>
     </div>
@@ -192,7 +192,7 @@ body.show-notes .slide.active .notes{display:block}
       <table class="words">
         <tr><td>Card</td><td>one number, chart or table</td></tr>
         <tr><td>Dashboard</td><td>a page with several cards</td></tr>
-        <tr><td>Filter</td><td>a dropdown to narrow the numbers, e.g. pick a village</td></tr>
+        <tr><td>Filter</td><td>a dropdown to narrow the numbers, e.g. pick a location</td></tr>
         <tr><td>Click-through</td><td>click a number to see the list behind it</td></tr>
         <tr><td>Data map</td><td>a file listing every table and column of one NGO</td></tr>
       </table>
@@ -220,12 +220,12 @@ body.show-notes .slide.active .notes{display:block}
       <li><span>Copy the first box on the right into Terminal and press Enter.<small>It downloads the pack and opens its folder.</small></span></li>
       <li><span>Type <code>./tools/setup.sh</code> and press Enter. Enter <b>your own</b> Metabase API key and Superset login.<small>Nothing shows while you type a password. That's normal. Never use someone else's logins.</small></span></li>
       <li><span>Type <code>./tools/tunnel.sh up</code>. Wait for <b>"read-only proven"</b>.</span></li>
-      <li><span>Type <code>claude</code>, then paste the second box with <mark>&lt;org name&gt;</mark> replaced by the practice NGO.</span></li>
+      <li><span>Type <code>claude</code>, then paste the second box. We practise on <b>Durga India UAT</b> (test data).</span></li>
     </ol>
     <div>
       <div class="type term"><p class="lbl">Type exactly · Terminal</p><button class="copy">Copy</button><pre>git clone https://github.com/siddharthr29/reporting-skills-avni.git
 cd reporting-skills-avni</pre></div>
-      <div class="type"><p class="lbl">Type exactly · Claude</p><button class="copy">Copy</button><pre>Set me up for reporting: open the read-only connection and download the data map for <mark>&lt;org name&gt;</mark>. Tell me in simple words when it's ready.</pre></div>
+      <div class="type"><p class="lbl">Type exactly · Claude</p><button class="copy">Copy</button><pre>Set me up for reporting: open the read-only connection and download the data map for Durga India UAT (schema durga_uat). Tell me in simple words when it's ready.</pre></div>
       <p class="lbl">Claude replies, something like</p>
       <div class="reply"><p>Connected, read-only: I can look at data but can't change anything. Data map saved for this NGO.</p></div>
     </div>
@@ -241,18 +241,18 @@ cd reporting-skills-avni</pre></div>
 <section class="slide"><div class="sheet">
   <div class="run"><span><img src="avni-logo.png" alt="Avni"><b>Reporting Workshop</b></span><span class="where"><span>Why</span><span>How</span><span>Ready</span><span class="on">1 Explain</span><span>2 Find</span><span>3 Build</span><span>4 Check</span><span>5 Deliver</span></span></div>
   <h2>Step 1 · Give Claude the requirement sheet</h2>
-  <p class="sub">Requirements usually arrive as a Google Sheet or Excel file, one row per indicator.</p>
+  <p class="sub">Clients send a Google Sheet or Excel file, one row per indicator. Today you use our practice sheet.</p>
   <div class="body">
     <ol class="do">
-      <li><span>Open the client's requirement sheet.</span></li>
-      <li><span>Google Sheet: click <b>Share</b> → <b>General access</b> → <b>Anyone with the link</b> → <b>Viewer</b> → <b>Copy link</b>.<small>Can't share it? Use File → Download → Microsoft Excel, and give the file path instead.</small></span></li>
-      <li><span>Paste the box on the right into Claude, with your link or file.</span></li>
+      <li><span>Open <code>practice/durga-india-practice-srs.xlsx</code> in the repo folder and read the READ ME tab.<small>With a real client, use their Google Sheet: Share → Anyone with the link → Viewer → Copy link.</small></span></li>
+      <li><span>Paste the box on the right into Claude.</span></li>
       <li><span>Read Claude's table. Answer every <b>needs clarification</b> question.<small>Don't know? Ask your lead or the client. Never guess.</small></span></li>
     </ol>
     <div>
-      <div class="type"><p class="lbl">Type exactly</p><button class="copy">Copy</button><pre>Read AGENTS.md. Here is the requirement sheet for <mark>&lt;org name&gt;</mark>: <mark>&lt;link or file path&gt;</mark>. Read every tab and show me each requirement marked buildable, needs clarification, or not in the data.</pre></div>
+      <div class="type"><p class="lbl">Type exactly</p><button class="copy">Copy</button><pre>Read AGENTS.md. This is PRACTICE. Here is the requirement sheet for Durga India practice (schema durga_uat): practice/durga-india-practice-srs.xlsx. Read every tab and show me each requirement marked buildable, needs clarification, or not in the data.</pre></div>
       <p class="lbl">Claude replies, something like</p>
-      <div class="reply"><p>I read 3 tabs, 12 requirements:</p><ul><li>9 buildable, e.g. "Children per village"</li><li>2 need clarification: does "active" include children who left?</li><li>1 not in the data: "Screening done" isn't recorded</li></ul></div>
+      <div class="reply"><p>I read 4 tabs, 14 requirements:</p><ul><li>10 buildable, e.g. P01 "Participants by location"</li><li>3 need clarification, e.g. P13: what does "active" mean?</li><li>1 not in the data: P14 job placement isn't recorded</li></ul></div>
+      <div class="note"><p><b>Practice only.</b> Build only in your own practice folder. Never change an original client report, dashboard or folder.</p></div>
     </div>
   </div>
   <div class="checks"><p class="lbl">Before you move on</p>
@@ -271,12 +271,12 @@ cd reporting-skills-avni</pre></div>
       <li><span>Paste the box on the right into Claude.</span></li>
       <li><span>Write down the <b>total</b> Claude shows.</span></li>
       <li><span>Compare it with a number you trust: the client's sheet, the field team, or the Avni app.</span></li>
-      <li><span>Different? Type: <i>"The app shows <mark>X</mark> but you show <mark>Y</mark>. Why could that be?"</i><small>Claude knows the usual reasons: deleted records, children who left, data not copied over yet.</small></span></li>
+      <li><span>Different? Type: <i>"The app shows <mark>X</mark> but you show <mark>Y</mark>. Why could that be?"</i><small>Claude knows the usual reasons: deleted records, people who left, data not copied over yet.</small></span></li>
     </ol>
     <div>
-      <div class="type"><p class="lbl">Type exactly</p><button class="copy">Copy</button><pre>Using the data map, find where children and their villages are stored and explain it in simple words. Then show me the number of children per village (top 10) and the total. Don't create anything yet.</pre></div>
+      <div class="type"><p class="lbl">Type exactly</p><button class="copy">Copy</button><pre>For P01: using the data map, find where participants and their locations are stored and explain it in simple words. Then show me the number of participants per location (top 10) and the total. Don't create anything yet.</pre></div>
       <p class="lbl">Claude replies, something like</p>
-      <div class="reply"><p>Children are in the child register, and each child's village comes from their address. I left out deleted records and children who left.</p><p>Village A 212 · Village B 164 · Village C 118 … <b>Total 1,248</b></p></div>
+      <div class="reply"><p>Participants are in the participant register, and each one's location comes from their address. I left out deleted records.</p><p>Location A · Location B · Location C … <b>Total 1,044</b></p></div>
     </div>
   </div>
   <div class="checks"><p class="lbl">Before you move on</p>
@@ -299,9 +299,9 @@ cd reporting-skills-avni</pre></div>
       <li><span>Click the link Claude gives you.</span></li>
     </ol>
     <div>
-      <div class="type"><p class="lbl">Type exactly</p><button class="copy">Copy</button><pre>Create this report in our practice folder: the total number, a bar chart by village, a Village dropdown filter, and make the number clickable to show the list of children. Show me the plan first.</pre></div>
+      <div class="type"><p class="lbl">Type exactly</p><button class="copy">Copy</button><pre>Build P01 in my practice folder: the total number, a bar chart by location, a Location dropdown filter, and make the number clickable to show the list of participants. Show me the plan first.</pre></div>
       <p class="lbl">Claude replies, something like</p>
-      <div class="reply"><p>Plan: 3 cards (the total, clickable; a bar chart by village; the list of children) and a Village dropdown connected to all three, in the practice folder. Nothing changed yet. Shall I create them?</p></div>
+      <div class="reply"><p>Plan: 3 cards (the total, clickable; a bar chart by location; the list of participants) and a Location dropdown connected to all three, in your practice folder. Nothing changed yet. Shall I create them?</p></div>
     </div>
   </div>
   <div class="checks"><p class="lbl">Before you move on</p>
@@ -318,16 +318,16 @@ cd reporting-skills-avni</pre></div>
   <div class="body">
     <ol class="do">
       <li><span>Open the link. It should load in <b>a few seconds</b>.</span></li>
-      <li><span>Click the <b>Village</b> filter. It must open a <b>list</b>, not a box to type in. Pick the first village.</span></li>
+      <li><span>Click the <b>Location</b> filter. It must open a <b>list</b>, not a box to type in. Pick the first location.</span></li>
       <li><span>The numbers change. Write down the total.</span></li>
       <li><span>Click that number. At the bottom of the list Metabase says <b>"Showing N rows"</b>. N must equal your number.</span></li>
       <li><span>Scroll the list: there should be no long codes like <code>3f2a9c1e-…</code>.</span></li>
       <li><span>Paste the box on the right. Claude checks the rest, including folders and who can open it.</span></li>
     </ol>
     <div>
-      <div class="type"><p class="lbl">Type exactly</p><button class="copy">Copy</button><pre>Run the checks on this report, including with one village selected, and show me the Definition of done as ticks and crosses.</pre></div>
+      <div class="type"><p class="lbl">Type exactly</p><button class="copy">Copy</button><pre>Run the checks on this report, including with one location selected, and show me the Definition of done as ticks and crosses.</pre></div>
       <p class="lbl">Something wrong? Describe what you see</p>
-      <div class="reply"><p>"When I click 212, the list shows everyone."</p><p>"The village filter is a typing box."</p><p class="fine" style="margin:.3rem 0 0">Claude finds how that exact problem was fixed before, and fixes it.</p></div>
+      <div class="reply"><p>"When I click 212, the list shows everyone."</p><p>"The location filter is a typing box."</p><p class="fine" style="margin:.3rem 0 0">Claude finds how that exact problem was fixed before, and fixes it.</p></div>
     </div>
   </div>
   <div class="checks"><p class="lbl">Before you move on</p>
@@ -348,15 +348,15 @@ cd reporting-skills-avni</pre></div>
         <li><span>Paste the second box, with the team that needs the report.</span></li>
         <li><span>Type <code>/learn</code>. It saves anything new for the next person.</span></li>
       </ol>
-      <div class="type" style="margin-top:1rem"><p class="lbl">Type exactly</p><button class="copy">Copy</button><pre>Write a short, friendly reply to the client: what we built, how to use the village filter, and the link. Only mention what we checked.</pre></div>
+      <div class="type" style="margin-top:1rem"><p class="lbl">Type exactly</p><button class="copy">Copy</button><pre>Write a short, friendly reply to the client: what we built, how to use the location filter, and the link. Only mention what we checked.</pre></div>
       <div class="type"><p class="lbl">Type exactly</p><button class="copy">Copy</button><pre>Give the <mark>&lt;team&gt;</mark> group access to every folder of this report, then show me the permission check.</pre></div>
     </div>
     <div>
       <p class="lbl">Your turn · 20 minutes · in pairs</p>
-      <div class="brief" style="margin-top:0"><p>"How many <b>home visits</b> happened <b>each month</b>? Let us pick a month, and click to see the visits."</p></div>
+      <div class="brief" style="margin-top:0"><p>Pick <b>2 more rows</b> from the practice sheet, e.g. <b>P06</b> sessions per month and <b>P07</b> topic coverage. Treat <b>P13</b> and <b>P14</b> like real client rows.</p></div>
       <ol class="do" style="margin-top:1rem">
-        <li><span>Do steps 1–5 again for the practice NGO.</span></li>
-        <li><span>Use the same boxes. Change only the words about children and villages.</span></li>
+        <li><span>Do steps 2–5 again for each row, in your practice folder.</span></li>
+        <li><span>Use the same boxes. Change only the row number and the words.</span></li>
         <li><span>Stuck? Ask Claude: <i>"Which playbook covers this problem?"</i> or open <b>START-HERE.md</b>.</span></li>
       </ol>
     </div>
@@ -365,7 +365,7 @@ cd reporting-skills-avni</pre></div>
     <label><input type="checkbox"> Definition of done all ticked</label>
     <label><input type="checkbox"> lead has seen the reply</label>
     <label><input type="checkbox"> I typed /learn</label></div>
-  <aside class="notes">During the exercise, the two most common slips are skipping step 2 (not looking at the numbers) and not clicking through in step 4. Close by asking two pairs to show their report.</aside>
+  <aside class="notes">Answer key for the practice sheet: practice/FACILITATOR-NOTES.md. Remind them: never touch a real client report. During the exercise, the two most common slips are skipping step 2 (not looking at the numbers) and not clicking through in step 4. Close by asking two pairs to show their report.</aside>
 </div></section>
 
 </main>

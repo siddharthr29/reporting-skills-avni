@@ -21,6 +21,7 @@ Read it fully, then load **only** the skill you need.
 7. **Read the whole ticket.** The Freshdesk API returns 10 conversations per page. Paginate, and open every attachment. The latest client message is usually the real ask.
 8. **No secrets or personal data** in files, commits, logs or replies. Refer to people by role. **Every person uses their own logins**, set with `./tools/setup.sh` (the tools refuse settings created by someone else). Never ask anyone to paste a password or API key into the chat.
 9. **Change only what was asked.** If you spot other problems, list them, don't fix them silently.
+10. **Practice mode never touches client reports.** When the user is practising (e.g. `practice/durga-india-practice-srs.xlsx`, or they say "practice"), create cards and dashboards **only** in their own practice collection, preferably on UAT data (`durga_uat`). **Never** create, edit, move, rename or delete anything in an original client report, dashboard or folder, even if asked during practice. If the target folder isn't clearly a practice folder, stop and ask.
 
 ## Definition of done: every report, every time
 
