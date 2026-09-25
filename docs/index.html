@@ -61,6 +61,9 @@ ol.do li small{display:block;color:var(--muted);font-size:.86em;margin-top:.15re
 .foot>span{max-width:1240px}
 .foot button{background:none;border:0;font:500 .82rem var(--sans);color:var(--ink);cursor:pointer;padding:.2rem .4rem}
 .foot button:hover{text-decoration:underline}
+.dl{display:inline-block;border:1.5px solid var(--ink);background:#fff;color:var(--ink);text-decoration:none;font:600 .9rem var(--sans);padding:.45rem .8rem;margin:.2rem 0}
+.dl:hover{background:var(--mark)}
+.dl small{display:block;font-weight:400;color:var(--muted);font-size:.78rem}
 .note{border:1px solid var(--rule);background:var(--page);padding:.55rem .9rem;margin-top:.7rem}
 .note p{margin:0}
 .title{display:grid;grid-template-columns:1.1fr 1fr;gap:4vw;align-items:start;margin-top:.8vh}
@@ -68,7 +71,7 @@ ol.do li small{display:block;color:var(--muted);font-size:.86em;margin-top:.15re
 .brief p{font-family:var(--serif);font-size:clamp(1.02rem,1.45vw,1.28rem);margin:.2rem 0 0}
 .brief p.lbl{font-family:var(--sans);font-size:.72rem;margin:0 0 .3rem}
 table.agenda{border-collapse:collapse;width:100%}
-table.agenda td{padding:.28rem 0;border-top:1px solid var(--rule);vertical-align:top}
+table.agenda td{padding:.2rem 0;border-top:1px solid var(--rule);vertical-align:top}
 table.agenda td:first-child{font-family:var(--mono);color:var(--muted);width:4rem;font-size:.88rem}
 table.agenda tr:last-child td{border-bottom:1px solid var(--rule)}
 .wire{border:1.5px solid var(--ink);background:#fff;margin-top:.9rem}
@@ -146,7 +149,7 @@ body.show-notes .slide.active .notes{display:block}
         <tr><td>3:59</td><td>Step 4 · Check: click it like the client would</td></tr>
         <tr><td>4:05</td><td>Step 5 · Deliver, then build your own in pairs</td></tr>
       </table>
-      <div class="brief"><p class="lbl">What you get</p><p>A ready-to-use repo you can keep using after today, built from reports for 9+ Avni organisations and lessons from real client support tickets.</p></div>
+      <div class="brief"><p class="lbl">What you get</p><p>A ready-to-use repo you can keep using after today, built from reports for 9+ Avni organisations and lessons from real client support tickets.</p><a class="dl" href="https://github.com/siddharthr29/reporting-skills-avni/raw/main/practice/durga-india-practice-srs.xlsx" download style="margin-top:.6rem">⬇ Practice requirement sheet (.xlsx)</a></div>
       <p class="fine">Everything in this workshop comes from real client feedback and requirements: 32 problems reported across 17 Avni organisations, and the mistakes we made fixing them.</p>
     </div>
   </div>
@@ -244,7 +247,7 @@ cd reporting-skills-avni</pre></div>
   <p class="sub">Clients send a Google Sheet or Excel file, one row per indicator. Today you use our practice sheet.</p>
   <div class="body">
     <ol class="do">
-      <li><span>Open <code>practice/durga-india-practice-srs.xlsx</code> in the repo folder and read the READ ME tab.<small>With a real client, use their Google Sheet: Share → Anyone with the link → Viewer → Copy link.</small></span></li>
+      <li><span>Download the practice sheet and read its <b>READ ME</b> tab:<br><a class="dl" href="https://github.com/siddharthr29/reporting-skills-avni/raw/main/practice/durga-india-practice-srs.xlsx" download>⬇ Durga India practice sheet (.xlsx)<small>also in the repo: practice/durga-india-practice-srs.xlsx</small></a><small>With a real client, use their Google Sheet: Share → Anyone with the link → Viewer → Copy link.</small></span></li>
       <li><span>Paste the box on the right into Claude.</span></li>
       <li><span>Read Claude's table. Answer every <b>needs clarification</b> question.<small>Don't know? Ask your lead or the client. Never guess.</small></span></li>
     </ol>
