@@ -56,6 +56,7 @@ The agent reads `AGENTS.md`, then `skills/avni-reporting/SKILL.md`, then the cat
 | [`skills/superset-reports`](skills/superset-reports/SKILL.md) | Datasets, charts, query_context, native filters, RLS, timeouts | Superset work |
 | [`skills/jasper-reports`](skills/jasper-reports/SKILL.md) | Diagnose + safe edit (export → edit JRXML → re-import) | Jasper tickets |
 | [`skills/report-performance`](skills/report-performance/SKILL.md) | Dead CTEs, MATERIALIZED, LATERAL, row caps | Anything slow / timing out |
+| [`skills/report-sql-review`](skills/report-sql-review/SKILL.md) | SQL code review: dead joins, per-row lookups, voided, multi-select traps, plan check | Any SQL written or changed |
 | [`skills/report-qa`](skills/report-qa/SKILL.md) | EXCEPT ALL, metric == drill, identities, UUID-leak scan | Before you say "done" |
 | [`playbooks/`](playbooks/) | Filter issues, drill-down issues, count mismatches, ticket handling, case studies | Debugging a ticket |
 | [`sql/patterns/`](sql/patterns/) | Copy-paste SQL for recurring Avni shapes | Writing SQL |

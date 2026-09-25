@@ -1,0 +1,9 @@
+{
+  "prompt": "The Phulwari team says they can see the Phulwari folder but it looks empty.",
+  "must_include": [
+    "inherit",
+    "mb.py perms",
+    "grant"
+  ],
+  "must_not_include": []
+}

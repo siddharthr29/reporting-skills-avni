@@ -10,6 +10,10 @@
   mb.py set-sql <card_id> -f new.sql [--apply]     patch a card's SQL IN PLACE, keeping template tags + params
   mb.py create-card --name N --collection C --db D -f q.sql [--display scalar|table|bar] [--apply]
                                                    new card (SQL validated in Metabase first; dry-run default)
+  mb.py tree <COLLECTION_ID>                       folder tree with dashboard/card counts; flags missing standard folders
+  mb.py folders <COLLECTION_ID> [--apply]          create missing standard folders (Dashboards, Report Cards, …)
+  mb.py perms <COLLECTION_ID>                      every group's access per folder; flags subfolder gaps
+  mb.py grant <COLLECTION_ID> --group G [--level read|write] [--apply]   grant a group the whole folder tree
   mb.py sync <db_id> [--values] [--apply]          sync_schema (and rescan_values)
   mb.py backup (card|dashboard) <id>
 """
@@ -147,6 +151,108 @@ def cmd_create_card(api, a):
     print(f"✓ created card #{c['id']}  {ENV.get('METABASE_URL', '').rstrip('/')}/question/{c['id']}")
 
 
+# ---------- folders (collections) & folder-wise permissions ----------
+STANDARD = ["Dashboards", "Report Cards", "Report Cards/Drill-downs", "Report Cards/Filter values"]
+
+
+def all_collections(api):
+    cols = api.get("/collection")
+    return [c for c in cols if isinstance(c.get("id"), int)]
+
+
+def subtree(api, root_id):
+    cols = all_collections(api)
+    root = next((c for c in cols if c["id"] == root_id), None)
+    if not root:
+        die(f"collection {root_id} not found")
+    prefix = f"{root.get('location', '/')}{root_id}/"
+    kids = [c for c in cols if (c.get("location") or "").startswith(prefix) and not c.get("archived")]
+    return root, kids
+
+
+def path_of(c, byid):
+    ids = [int(x) for x in (c.get("location") or "/").strip("/").split("/") if x]
+    return " / ".join([byid[i]["name"] for i in ids if i in byid] + [c["name"]])
+
+
+def cmd_tree(api, a):
+    root, kids = subtree(api, a.id)
+    byid = {c["id"]: c for c in [root] + kids}
+    print(f"{root['name']}  (#{root['id']})")
+    for c in sorted(kids, key=lambda c: path_of(c, byid)):
+        depth = len([x for x in c["location"].strip("/").split("/") if x]) - len([x for x in root.get("location", "/").strip("/").split("/") if x])
+        items = api.get(f"/collection/{c['id']}/items?models=card&models=dashboard").get("data", [])
+        n_card = sum(1 for i in items if i.get("model") == "card")
+        n_dash = sum(1 for i in items if i.get("model") == "dashboard")
+        print(f"{'   ' * depth}└─ {c['name']}  (#{c['id']}) — {n_dash} dashboard(s), {n_card} card(s)")
+    missing = [s for s in STANDARD if not any(path_of(c, byid).endswith(" / " + s.replace("/", " / ")) for c in kids)]
+    if missing:
+        print(f"\n! missing standard folders: {missing}  →  mb.py folders {a.id} --apply")
+
+
+def cmd_folders(api, a):
+    root, kids = subtree(api, a.id)
+    byid = {c["id"]: c for c in [root] + kids}
+    have = {path_of(c, byid): c["id"] for c in kids}
+    base = path_of(root, byid)
+    for s in STANDARD:
+        full = base + " / " + s.replace("/", " / ")
+        if full in have:
+            print(f"✓ {s}")
+            continue
+        parent = a.id if "/" not in s else have.get(base + " / " + s.split("/")[0])
+        if not a.apply:
+            print(f"+ would create {s!r}")
+            continue
+        c = api.post("/collection", {"name": s.split("/")[-1], "parent_id": parent})
+        have[full] = c["id"]
+        print(f"✓ created {s!r} (#{c['id']})")
+    if not a.apply:
+        print("DRY-RUN. Re-run with --apply to create missing folders.")
+
+
+def cmd_perms(api, a):
+    root, kids = subtree(api, a.id)
+    byid = {c["id"]: c for c in [root] + kids}
+    graph = api.get("/collection/graph")
+    groups = {g["id"]: g["name"] for g in api.get("/permissions/group")}
+    folders = [root] + sorted(kids, key=lambda c: path_of(c, byid))
+    gaps = 0
+    for gid, perms in graph["groups"].items():
+        levels = {c["id"]: perms.get(str(c["id"]), perms.get(c["id"], "none")) for c in folders}
+        if all(v == "none" for v in levels.values()) or groups.get(int(gid)) == "Administrators":
+            continue
+        print(f"\nGroup {groups.get(int(gid), gid)!r} (#{gid})")
+        for c in folders:
+            lvl = levels[c["id"]]
+            parent_ids = [int(x) for x in (c.get("location") or "/").strip("/").split("/") if x]
+            parent_has = any(levels.get(p, "none") != "none" for p in parent_ids if p in levels)
+            gap = lvl == "none" and parent_has
+            gaps += gap
+            print(f"   {'✗' if gap else ('✓' if lvl != 'none' else '·')} {path_of(c, byid)}: {lvl}"
+                  + ("   ← NO ACCESS to this subfolder (permissions don't inherit)" if gap else ""))
+    print(f"\n{'✓ no gaps' if not gaps else f'✗ {gaps} subfolder gap(s) — fix: mb.py grant {a.id} --group <id> --level read --apply'}")
+
+
+def cmd_grant(api, a):
+    root, kids = subtree(api, a.id)
+    graph = api.get("/collection/graph")
+    ids = [root["id"]] + [c["id"] for c in kids]
+    cur = graph["groups"].get(str(a.group), {})
+    changes = {str(i): a.level for i in ids if cur.get(str(i), cur.get(i, "none")) != a.level}
+    print(f"Group #{a.group}: set '{a.level}' on {len(ids)} folder(s) under #{a.id}; {len(changes)} change(s) needed")
+    if not changes:
+        return
+    if not a.apply:
+        print("DRY-RUN. Re-run with --apply to grant.")
+        return
+    backup("collection_graph", a.group, graph)
+    api.put("/collection/graph", {"revision": graph["revision"], "groups": {str(a.group): changes}})
+    after = api.get("/collection/graph")["groups"].get(str(a.group), {})
+    ok = all(after.get(k, after.get(int(k))) == a.level for k in changes)
+    print(f"{'✓' if ok else '✗'} granted '{a.level}' on {len(changes)} folder(s)")
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sp = ap.add_subparsers(dest="cmd", required=True)
@@ -163,6 +269,11 @@ def main():
     p.add_argument("--db", type=int, required=True); p.add_argument("-f", "--file", required=True)
     p.add_argument("--display", default="table", choices=["table", "scalar", "bar", "pie", "line"])
     p.add_argument("--description", default=None); p.add_argument("--apply", action="store_true")
+    p = sp.add_parser("tree"); p.add_argument("id", type=int)
+    p = sp.add_parser("folders"); p.add_argument("id", type=int); p.add_argument("--apply", action="store_true")
+    p = sp.add_parser("perms"); p.add_argument("id", type=int)
+    p = sp.add_parser("grant"); p.add_argument("id", type=int); p.add_argument("--group", type=int, required=True)
+    p.add_argument("--level", choices=["read", "write"], default="read"); p.add_argument("--apply", action="store_true")
     p = sp.add_parser("sync"); p.add_argument("id", type=int); p.add_argument("--values", action="store_true")
     p.add_argument("--apply", action="store_true")
     p = sp.add_parser("backup"); p.add_argument("kind", choices=["card", "dashboard"]); p.add_argument("id", type=int)
@@ -188,6 +299,8 @@ def main():
         cmd_set_sql(api, a)
     elif a.cmd == "create-card":
         cmd_create_card(api, a)
+    elif a.cmd in ("tree", "folders", "perms", "grant"):
+        {"tree": cmd_tree, "folders": cmd_folders, "perms": cmd_perms, "grant": cmd_grant}[a.cmd](api, a)
     elif a.cmd == "sync":
         steps = ["sync_schema"] + (["rescan_values"] if a.values else [])
         if not a.apply:

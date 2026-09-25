@@ -265,7 +265,7 @@ body.show-notes .slide.active .notes{display:block}
 <section class="slide">
   <div class="head"><img src="avni-logo.png" alt="Avni"><div class="steps"><span class="done">Get ready</span><span class="done">1 Explain</span><span class="done">2 Find</span><span class="done">3 Build</span><span class="on">4 Check</span><span>5 Deliver</span></div></div>
   <h2>Step 4 · Check it like the client would</h2>
-  <p class="lead">Open the link yourself and click around. Five checks catch almost every problem we've seen.</p>
+  <p class="lead">Open the link yourself and click around. These checks catch almost every problem we've seen.</p>
   <div class="cols">
     <div class="card">
       <ul class="plain">
@@ -274,14 +274,15 @@ body.show-notes .slide.active .notes{display:block}
         <li>Click the number: the list has the <b>same count</b> as the number (212 → 212 rows)</li>
         <li>All villages <b>add up</b> to the total</li>
         <li>No strange codes like <code>3f2a9c1e-…</code> in the list</li>
+        <li>It's in the <b>right folder</b>, and the <b>team can open it</b></li>
       </ul>
     </div>
     <div>
-      <div class="prompt"><span class="lbl">Then you type</span><button class="copy">Copy</button>Run the checks on this report and tell me in simple words if anything is wrong.</div>
+      <div class="prompt"><span class="lbl">Then you type</span><button class="copy">Copy</button>Run the checks on this report, including with one village selected, and show me the Definition of done as ticks and crosses.</div>
       <div class="tip"><p><b>Something's off? Describe what you see, in plain words:</b><br>"When I click 212, the list shows everyone."<br>"The village filter is a typing box."<br>Claude looks up how that problem was fixed before, and fixes it.</p></div>
     </div>
   </div>
-  <div class="check"><span class="t">✓ Move on when</span><p>All five boxes are ticked, and Claude's checks say everything matches.</p></div>
+  <div class="check"><span class="t">✓ Move on when</span><p>All boxes are ticked, and Claude's <b>Definition of done</b> is all ✅: fast, exact click-through, dropdowns, folders, access.</p></div>
   <aside class="notes">These five checks map to the most common tickets we've had: slow reports, text-box filters, clicks showing the wrong list, totals that don't add up, raw IDs. Interns don't need to know why. They need to notice.</aside>
 </section>
 
@@ -292,7 +293,7 @@ body.show-notes .slide.active .notes{display:block}
   <div class="cols">
     <div>
       <div class="prompt"><span class="lbl">You type</span><button class="copy">Copy</button>Write a short, friendly reply to the client: what we built, how to use the village filter, and the link. Only mention what we checked.</div>
-      <div class="prompt" style="margin-top:.9rem"><span class="lbl">Then type</span><button class="copy">Copy</button>/learn</div>
+      <div class="prompt" style="margin-top:.9rem"><span class="lbl">Then type</span><button class="copy">Copy</button>Give the <em>&lt;team&gt;</em> group access to every folder of this report, then show me the permission check. After that: /learn</div>
       <p style="margin-top:.6rem"><b>/learn</b> saves anything new Claude found today, so the next person, and the next Claude, doesn't hit the same problem.</p>
     </div>
     <div class="card" style="border-top:6px solid var(--g1)">
@@ -302,7 +303,7 @@ body.show-notes .slide.active .notes{display:block}
       <p style="margin:.3rem 0">Stuck? Ask Claude: <i>"Which playbook covers this problem?"</i> Or open <b>START-HERE.md</b>.</p>
     </div>
   </div>
-  <div class="check"><span class="t">✓ Done when</span><p>Your report passes the 5 checks, your lead has seen the reply, and you've typed <b>/learn</b>.</p></div>
+  <div class="check"><span class="t">✓ Done when</span><p>Definition of done is all ✅ (including folders and access), your lead has seen the reply, and you've typed <b>/learn</b>.</p></div>
   <aside class="notes">Walk around during the exercise. The most common mistakes: skipping step 2 (not looking at the numbers) and not clicking through in step 4. Close by asking two pairs to show their report.</aside>
 </section>
 

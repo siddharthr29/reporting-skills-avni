@@ -20,6 +20,38 @@ Read it fully, then load **only** the skill you need.
 8. **No secrets or personal data** in files, commits, logs or replies. Refer to people by role. **Every person uses their own logins**, set with `./tools/setup.sh` (the tools refuse settings created by someone else). Never ask anyone to paste a password or API key into the chat.
 9. **Change only what was asked.** If you spot other problems, list them, don't fix them silently.
 
+## Definition of done: every report, every time
+
+**Tell the user these standards when you present the plan, and report each one as ✅/❌ at the end.** A report is not done until all eight pass:
+
+| # | Standard | How it's checked |
+|---|---|---|
+| 1 | **SQL reviewed**: no errors; warnings fixed or explained in the card description | `python3 tools/sql_review.py --card <id> --explain` (skill `report-sql-review`) |
+| 2 | **Fast**: every card loads in **≤5s** (hard limit 30s Metabase / 60s Superset) | `qa.py audit-dash` speed section; slow → `skills/report-performance` |
+| 3 | **Exact drill-down**: if a card shows 10, clicking it opens exactly those 10 rows, **with filters applied too** | `qa.py audit-dash <id> --param <filter>=<value>` drill section |
+| 4 | **Every number is clickable** (count/chart cards open their list) unless deliberately not, and documented | audit "Numbers clickable" |
+| 5 | **Filters are dropdowns** on the dashboard **and** on each card's own page, with no voided values, and each filter connected to every card it should change | audit "Filters are dropdowns" + "Filters connected" |
+| 6 | **Standard folders**: see below | `mb.py tree <org folder>`; create with `mb.py folders <id> --apply` |
+| 7 | **Folder-wise permissions**: every group that needs the report has access to **every** folder and subfolder in the tree (Metabase permissions **do not inherit**) | `mb.py perms <org folder>`; fix with `mb.py grant <id> --group <g> --level read --apply` |
+| 8 | **Proven numbers**: totals match the app or client sheet (or the difference is explained); no raw IDs; after a rewrite, `EXCEPT ALL` = 0 | `skills/report-qa` |
+
+Run everything at once: `python3 tools/qa.py audit-dash <DASH_ID> [--param village=<value>]`, which covers 1–5 in one scorecard. Then `mb.py tree` + `mb.py perms` cover 6–7.
+
+### Standard folder structure (Metabase)
+```
+<Org name> Reports/                 ← one folder per org
+├── Dashboards/                     ← only dashboards (what users open)
+└── Report Cards/                   ← cards used on the dashboards
+    ├── Drill-downs/                ← "(drill) …" list cards opened by clicking a number
+    └── Filter values/              ← "(filter values) …" helper cards that feed dropdowns
+```
+- Name drills `(drill) [KEY] <metric>` and helpers `(filter values) <field>`.
+- Never leave cards loose in someone's personal collection or in the root.
+- Old versions go to **Archive** (Metabase's archive), never deleted, and never left alongside live ones.
+
+### Folder-wise permissions (Metabase)
+Granting a group access to `<Org> Reports` does **not** give access to `Dashboards/` or `Report Cards/` inside it. Every subfolder needs its own grant, or users see an empty folder or broken cards. After creating folders or adding a group, **always** run `mb.py perms <org folder>` and fix every ✗. Tell the user which groups can see the report. Check with an admin before granting a group they didn't name.
+
 ## Working with beginners (interns, non-technical staff)
 
 Many users follow `START-HERE.md` and talk in plain words. Map their phrases to actions:
@@ -32,7 +64,8 @@ Many users follow `START-HERE.md` and talk in plain words. Map their phrases to 
 | "fill in the requirement form" | walk through `templates/requirement-intake.md` and ask **only** the open questions, max 3–4 at a time |
 | "show me the numbers, don't create anything" | run read-only queries (`tools/q.sh`), give a short table + total, no Metabase writes |
 | "show me the plan first" | list the cards, filters and click-throughs you'll create/change, then **wait for a yes** |
-| "run the checks" | `skills/report-qa`: load time, dropdown filters, metric == click-through list count, totals add up, no raw IDs |
+| "run the checks" | `qa.py audit-dash <dashboard>` (plus `--param` with a filter they care about), `mb.py tree` + `mb.py perms` on the org folder, then report the **Definition of done** table as ✅/❌ in plain words |
+| "give <team> access" | `mb.py perms` then `mb.py grant <org folder> --group <g> --level read` (dry-run first, then `--apply`), and confirm every subfolder shows ✓ |
 | "the list shows everyone" / "the filter is a typing box" | look up `playbooks/drilldown-issues.md` / `playbooks/filter-issues.md` |
 | "write the reply" | `templates/client-reply.md`, plain language, only verified claims |
 | "/learn" | `skills/report-learnings` capture step |
@@ -51,7 +84,7 @@ intake ──► catalogue ──► pattern ──► build (API) ──► QA 
 2. **Catalogue (mandatory, before any SQL).** `./tools/dump_org_schema.sh <schema>`, then **grep `schemas/<schema>/CATALOG.md`**. It's compact and already hides personal values. Re-dump when you hit "column does not exist" or the catalogue is older than 14 days.
 3. **Pattern.** Adapt a file from `sql/patterns/`. Check `skills/avni-etl-data-model` for traps (voided, coded multi-selects, UUID arrays, membership double-counts, NULL dates).
 4. **Build.** Metabase → `skills/metabase-reports`. Superset → `skills/superset-reports`. Jasper → `skills/jasper-reports` (diagnose and safe edit only).
-5. **QA.** `skills/report-qa` + `tools/qa.py`. Time it cold and warm. It must load well under 60s (Superset) or 120s (Metabase), and should be under 30s.
+5. **QA.** Run the **Definition of done** checks: `tools/sql_review.py`, `tools/qa.py audit-dash`, `mb.py tree`, `mb.py perms`. Goal: every card ≤5s.
 6. **Handover.** `templates/handover-note.md` + `templates/client-reply.md`. Claim only what you verified.
 7. **Learn (mandatory).** Before ending, check whether anything was new, surprising, or contradicted a skill. If so, record it with `python3 tools/add_learning.py …` (see `skills/report-learnings`). Corrections to wrong advice matter most. In Claude Code: `/learn`.
 

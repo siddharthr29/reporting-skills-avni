@@ -56,8 +56,12 @@ select count(distinct person_id) as "Children visited" from base
 - Native cards don't auto-drill. If you need click-through on a GUI question, build it on a **Model**.
 - When MBQL can't dedup (e.g. membership double-count), convert that card to native SQL with `DISTINCT ON`.
 
-## Collections & permissions
-Layout: `<Org> → Reports → {Dashboards, Report Cards}`. **Permissions don't inherit into subcollections.** Grant each one (`PUT /api/collection/graph`). Details and the stale `/api/user/<id>` trap are in `references/permissions.md`.
+## Folders & permissions (part of the Definition of done)
+Layout: `<Org> Reports/ → Dashboards/, Report Cards/ → Drill-downs/, Filter values/`. See `mb.py tree <id>`, and create missing folders with `mb.py folders <id> --apply`.
+**Permissions don't inherit into subfolders.** Every group needs a grant on every folder: `mb.py perms <id>` shows the gaps, and `mb.py grant <id> --group <g> --level read --apply` fixes the whole tree. Details and the stale `/api/user/<id>` trap are in `references/permissions.md`.
+
+## One-command check
+`python3 tools/qa.py audit-dash <DASH_ID> [--param village=<v>]` checks dropdowns (dashboard **and** card page), filter wiring, clickable numbers, drill == number (also filtered), speed ≤5s, and SQL review.
 
 ## References
 - `references/api.md` — endpoints, payload shapes, revision recovery, CSV export beyond 2,000 rows.

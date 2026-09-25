@@ -60,6 +60,7 @@ All three read **the same per-org flat ETL schema** in the one `openchs` Postgre
 Then open the matching playbook: `filter-issues.md`, `drilldown-issues.md`, `count-mismatch.md`.
 
 ## Standards every report meets
+The full list, with how to check each, is the **Definition of done** in `AGENTS.md`: SQL reviewed, ≤5s per card, exact drill-down (also filtered), every number clickable, dropdown filters, standard folders, folder-wise permissions, proven numbers. State it in your plan and report it at the end. Also:
 
 - **Three tiers**: title + "what these metrics mean" → count cards → drillable line lists.
 - **One base query** per dashboard, and the same filters everywhere.

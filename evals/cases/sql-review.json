@@ -1,0 +1,8 @@
+{
+  "prompt": "Review this card's SQL before I save it: it LEFT JOINs a CTE that ranks all growth visits per child.",
+  "must_include": [
+    "sql_review",
+    "dead"
+  ],
+  "must_not_include": []
+}

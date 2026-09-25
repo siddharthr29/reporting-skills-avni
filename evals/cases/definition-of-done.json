@@ -1,0 +1,9 @@
+{
+  "prompt": "I've built the Sangwari ANC dashboard. Is it ready to hand over?",
+  "must_include": [
+    "audit-dash",
+    "perms",
+    "Definition of done"
+  ],
+  "must_not_include": []
+}

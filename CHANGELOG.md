@@ -2,6 +2,13 @@
 
 Curated learnings are recorded here when they move from `LEARNINGS.md` into the skills.
 
+## 2026-09-25 — Definition of done, SQL review, dashboard audit, folders & permissions
+- AGENTS.md **Definition of done** (8 standards): SQL reviewed, ≤5s per card, exact drill-down (also filtered), every number clickable, dropdown filters (dashboard + card page), standard folders, folder-wise permissions, proven numbers. Agents state it in the plan and report ✅/❌ at the end.
+- New skill `report-sql-review` + `tools/sql_review.py` (static rules incl. dead-join/dead-CTE/per-row public lookups/voided/multi-select ILIKE/NOT IN/LIMIT; `--explain` plan check). Catches the APF Odisha dead join.
+- `qa.py audit-dash <id> [--param k=v]`: one scorecard for dropdowns, wiring, clickable, drill==number (filtered too), speed, SQL.
+- `mb.py tree | folders | perms | grant`: standard folder layout + folder-wise permission gaps/fix (permissions don't inherit).
+- Speed goal tightened to ≤5s per card; deck slides 7–8, START-HERE, skills updated; 3 eval cases.
+
 ## 2026-09-25 — everyone uses their own logins
 - `tools/setup.sh`: guided first-run setup. Each person enters their OWN Metabase API key and Superset login (hidden input); both are checked live; writes a private `tools/.env` (chmod 600) stamped `SETUP_BY=<their username>`.
 - Every tool (Python and shell) refuses settings created by someone else, e.g. a copied `.env`.

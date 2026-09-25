@@ -66,8 +66,11 @@ Read the plan, then say **"Yes, go ahead"**. Never change a client's live report
 - [ ] Clicking a number shows a list with the **same count**
 - [ ] The parts **add up** to the total
 - [ ] No strange codes like `3f2a9c1e-…` in the list
+- [ ] It's in the **right folder** (Dashboards / Report Cards), and the **team that needs it can open every folder**
 
 > Run the checks on this report and tell me in simple words if anything is wrong.
+
+Claude reports the **8-point "Definition of done"** (fast, exact click-through, dropdowns, folders, permissions…) as ✅/❌.
 
 Something off? Describe what you see: *"When I click 212, the list shows everyone."* Claude knows how that was fixed before.
 

@@ -8,6 +8,14 @@ description: Verification checklist and methods to prove an Avni report is corre
 A reply to a client may only claim what one of these checks proved.
 Every check here works on **counts and masked output**. You never need to read a person's name to verify a report.
 
+## Fastest path
+```bash
+python3 tools/qa.py audit-dash <DASH_ID>                        # dropdowns, wiring, clickable, drill==number, speed, SQL
+python3 tools/qa.py audit-dash <DASH_ID> --param village=<v>    # same, with a filter applied
+python3 tools/mb.py tree <ORG_FOLDER_ID>; python3 tools/mb.py perms <ORG_FOLDER_ID>
+```
+Then report the **Definition of done** table from `AGENTS.md` as ✅/❌.
+
 ## The checklist (run all that apply)
 
 | # | Check | How | Pass |

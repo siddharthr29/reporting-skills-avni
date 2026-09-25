@@ -5,7 +5,15 @@
 - Database-level access is often "unrestricted" for every group here. Access is really gated by **collections**. Don't mistake that for over-exposure.
 - **Subcollections do not inherit.** Granting `Org → Reports` does NOT grant `Org → Reports → Dashboards`. Every subcollection needs its own grant, or users see only the top level ("I can't see the reports").
 
-## Granting a group read on a collection tree
+## With the tools (recommended)
+```bash
+python3 tools/mb.py perms <ORG_FOLDER_ID>                                  # every group × every folder; ✗ = gap
+python3 tools/mb.py grant <ORG_FOLDER_ID> --group <GROUP_ID> --level read  # dry-run: shows changes
+python3 tools/mb.py grant <ORG_FOLDER_ID> --group <GROUP_ID> --level read --apply   # backs up the graph first
+python3 tools/mb.py perms <ORG_FOLDER_ID>                                  # confirm: no ✗ left
+```
+
+## Granting a group read on a collection tree (raw API)
 ```
 GET  /api/collection/graph                 → {revision, groups:{<gid>:{<cid>:"read"|"write"|"none"}}}
      find the tree: every collection whose `location` starts with "/<root_id>/" (plus the root)

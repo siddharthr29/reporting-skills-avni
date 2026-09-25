@@ -5,6 +5,8 @@ description: Make slow Avni report queries fast without touching production (no 
 
 # Report performance — the playbook
 
+**Target: every card ≤5 seconds** (hard limits: Superset 60s, Metabase ~120s). Find slow cards with `python3 tools/qa.py audit-dash <DASH_ID>` or `qa.py time <CARD_ID>`, and see why with `python3 tools/sql_review.py --card <CARD_ID> --explain`.
+
 **You cannot add indexes or run DDL on production.** Every fix here is a **query rewrite**, proven identical with `EXCEPT ALL` (see `report-qa`).
 
 ## Step 1 — measure
