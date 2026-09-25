@@ -58,10 +58,15 @@ ul.plain li{padding:.35em 0 .35em 2rem;position:relative}
 ul.plain li::before{content:"☐";position:absolute;left:0;color:var(--g2);font-size:1.25em;line-height:1.1}
 /* title slide */
 .hero{display:grid;grid-template-columns:1.05fr 1fr;gap:3vw;align-items:center;margin-block:auto}
+.hero h1{font-size:clamp(1.9rem,3.6vw,3.3rem)}
 .quote{background:#fff;border:1px solid var(--line);border-left:6px solid var(--g1);border-radius:14px;padding:1rem 1.2rem;font-size:clamp(1.05rem,1.5vw,1.3rem);line-height:1.45}
 .quote small{display:block;color:var(--muted);font-size:.8em;margin-top:.4rem}
 .journey{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1.4rem}
-.journey div{flex:1;min-width:110px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:.6rem .7rem;text-align:center;font-weight:700}
+.journey div{flex:1;min-width:88px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:.6rem .7rem;text-align:center;font-weight:700}
+.real{margin-top:1.2vh;display:flex;gap:.8rem;align-items:center;flex-wrap:wrap;background:var(--amberl);border-left:5px solid #f59e0b;border-radius:12px;padding:.65rem .9rem}
+.real b.h{font-size:clamp(.95rem,1.2vw,1.1rem)}
+.real .fb{display:flex;gap:.45rem;flex-wrap:wrap}
+.real .fb span{background:#fff;border:1px solid #f3dfb8;border-radius:999px;padding:.2em .7em;font-size:clamp(.78rem,1vw,.9rem)}
 .journey div span{display:block;font-weight:500;color:var(--muted);font-size:.85rem;margin-top:.15rem}
 /* dashboard mock */
 .mock{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 12px 36px rgba(20,60,45,.10);overflow:hidden}
@@ -130,6 +135,7 @@ body.show-notes .slide.active .notes{display:block}
         <div>4 · Check<span>test like the client</span></div>
         <div>5 · Deliver<span>reply + save learnings</span></div>
       </div>
+
     </div>
     <div class="mock" aria-label="What the finished report looks like">
       <div class="bar"><i></i><i></i><i></i>&nbsp;Children by village · Metabase</div>
@@ -150,7 +156,9 @@ body.show-notes .slide.active .notes{display:block}
       </div>
     </div>
   </div>
-  <aside class="notes">Set expectations: nobody needs to know SQL today. The skill is asking Claude clearly and checking its work. The finished report on the right is our goal. Keep coming back to it.</aside>
+  <div class="real"><b class="h">📋 Everything today comes from real client feedback: 32 issues from 17 Avni organisations.</b>
+        <div class="fb"><span>"Clicking 'Absent' showed Present students"</span><span>"We registered 2,000 children, the report shows 173"</span><span>"The list won't download"</span></div></div>
+  <aside class="notes">Stress: none of this is theory. Every step and check exists because a client reported that exact problem (see playbooks/client-feedback-lessons.md). Set expectations: nobody needs to know SQL today. The skill is asking Claude clearly and checking its work. The finished report on the right is our goal. Keep coming back to it.</aside>
 </section>
 
 <!-- 2 · How it works -->

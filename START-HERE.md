@@ -5,6 +5,8 @@
 You don't need to know SQL. **Claude does the technical work. You explain, guide and check.**
 This guide follows the session deck: https://siddharthr29.github.io/reporting-skills-avni/
 
+**Everything here comes from real client feedback and real requirements**: 32 problems clients reported across 17 Avni organisations, and the mistakes we made fixing them. Worth reading once: [`playbooks/client-feedback-lessons.md`](playbooks/client-feedback-lessons.md).
+
 ---
 
 ## Words you'll hear

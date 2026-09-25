@@ -19,6 +19,8 @@
 
 ---
 
+> **Built from real work.** Every rule, fix and check in this repo comes from **real client feedback and real requirements**: 32 client issues from 17 Avni organisations, plus the mistakes we made fixing them. Read them in [`playbooks/client-feedback-lessons.md`](playbooks/client-feedback-lessons.md).
+
 ## Why this exists
 
 Reports for Avni orgs kept going wrong in the same few ways. Drill-downs opened the whole list, dropdown filters showed up as free-text boxes, a form change silently broke a card, and a line list timed out after 60s. Agents also burned tokens re-discovering an org's schema every session. This repo turns ~30 real report builds and support tickets into:
@@ -58,6 +60,7 @@ The agent reads `AGENTS.md`, then `skills/avni-reporting/SKILL.md`, then the cat
 | [`skills/report-performance`](skills/report-performance/SKILL.md) | Dead CTEs, MATERIALIZED, LATERAL, row caps | Anything slow / timing out |
 | [`skills/report-sql-review`](skills/report-sql-review/SKILL.md) | SQL code review: dead joins, per-row lookups, voided, multi-select traps, plan check | Any SQL written or changed |
 | [`skills/report-qa`](skills/report-qa/SKILL.md) | EXCEPT ALL, metric == drill, identities, UUID-leak scan | Before you say "done" |
+| [`playbooks/client-feedback-lessons.md`](playbooks/client-feedback-lessons.md) | What clients told us, what was really wrong (including our mistakes), and the rule each created | First read for everyone |
 | [`playbooks/`](playbooks/) | Filter issues, drill-down issues, count mismatches, ticket handling, case studies | Debugging a ticket |
 | [`sql/patterns/`](sql/patterns/) | Copy-paste SQL for recurring Avni shapes | Writing SQL |
 | [`tools/`](tools/) | tunnel, schema dump + catalogue, Metabase/Superset clients, QA | Setup + every build |

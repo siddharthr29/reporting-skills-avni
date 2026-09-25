@@ -2,6 +2,10 @@
 
 Curated learnings are recorded here when they move from `LEARNINGS.md` into the skills.
 
+## 2026-09-25 — built from real client feedback
+- New `playbooks/client-feedback-lessons.md`: 32 real client issues from 17 orgs (what the client said → what was really wrong → the rule it created), plus 8 mistakes we made ourselves and the rule each created.
+- README, AGENTS.md, START-HERE and deck slide 1 state that everything comes from real client feedback and requirements; `/curate` promotes new client feedback onto that page.
+
 ## 2026-09-25 — Definition of done, SQL review, dashboard audit, folders & permissions
 - AGENTS.md **Definition of done** (8 standards): SQL reviewed, ≤5s per card, exact drill-down (also filtered), every number clickable, dropdown filters (dashboard + card page), standard folders, folder-wise permissions, proven numbers. Agents state it in the plan and report ✅/❌ at the end.
 - New skill `report-sql-review` + `tools/sql_review.py` (static rules incl. dead-join/dead-CTE/per-row public lookups/voided/multi-select ILIKE/NOT IN/LIMIT; `--explain` plan check). Catches the APF Odisha dead join.

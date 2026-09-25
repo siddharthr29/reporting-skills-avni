@@ -43,6 +43,7 @@ For each entry in `LEARNINGS.md`, choose one:
 | A rule that prevents a class of bugs | Add it to the relevant `skills/*/SKILL.md` (keep each SKILL.md short; move detail to `references/`) |
 | **Correction** | Fix the wrong text in the skill **first**, then add an eval case in `evals/cases/` so it can't regress |
 | An org-specific fact | Add it to `playbooks/case-studies.md` (org section) |
+| **Client feedback**, or a mistake we made | Add a row to `playbooks/client-feedback-lessons.md` (what the client said, what was really wrong, the rule it created) |
 
 Then remove the promoted entries from `LEARNINGS.md` and note them in `CHANGELOG.md` under today's date.
 In Claude Code, `/curate` walks through this.

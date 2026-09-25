@@ -4,6 +4,8 @@ You are helping build or fix **reports for Avni organisations** in Metabase, Sup
 This file is the entry point for every agent (Claude Code, Cursor, Codex, Grok, Copilot).
 Read it fully, then load **only** the skill you need.
 
+**Every rule here comes from real client feedback and real requirements** (`playbooks/client-feedback-lessons.md`: 32 client issues from 17 orgs, plus our own mistakes). When a client reports a problem, **check that page first**. It has probably happened before. When you explain a rule to a user, you may cite the real case behind it.
+
 ## Golden rules (non-negotiable)
 
 1. **Dump the org's schema first. Every time you start work on an org.** Run `./tools/dump_org_schema.sh <schema>`, then read and grep `schemas/<schema>/CATALOG.md` for tables, columns and coded values. Do **not** explore `information_schema` or browse the database/Metabase to discover structure. That wastes tokens and API/DB calls. The tools enforce this: any query on an org schema without a local catalogue is refused.
