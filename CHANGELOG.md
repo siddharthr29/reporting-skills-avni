@@ -2,6 +2,10 @@
 
 Curated learnings are recorded here when they move from `LEARNINGS.md` into the skills.
 
+## 2026-09-25 — workshop deck redesign
+- Deck rebuilt as a hands-on workshop handout (serif headings, ruled layout, no emoji/gradients): every step is a numbered "Do this" list with exact clicks, a "Type exactly" box with copy button, what Claude replies, and tick-boxes.
+- New slide 2 "Why this pack, and not just ask the AI" (side-by-side + real proof). Deck is now 9 slides with a timed agenda.
+
 ## 2026-09-25 — built from real client feedback
 - New `playbooks/client-feedback-lessons.md`: 32 real client issues from 17 orgs (what the client said → what was really wrong → the rule it created), plus 8 mistakes we made ourselves and the rule each created.
 - README, AGENTS.md, START-HERE and deck slide 1 state that everything comes from real client feedback and requirements; `/curate` promotes new client feedback onto that page.

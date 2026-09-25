@@ -67,7 +67,7 @@ The agent reads `AGENTS.md`, then `skills/avni-reporting/SKILL.md`, then the cat
 | [`templates/`](templates/) | Requirement intake, report spec, handover note, client reply | Start / end of a job |
 | [`labs/`](labs/) | 3 hands-on labs with solutions | Training |
 | [`evals/`](evals/) | Prompts + must-include answers to test an agent | After changing skills |
-| [`docs/`](docs/) | The 8-slide session deck (GitHub Pages) | The session |
+| [`docs/`](docs/) | The 9-slide hands-on workshop deck (GitHub Pages) | The session |
 
 ## Safety in one paragraph
 
