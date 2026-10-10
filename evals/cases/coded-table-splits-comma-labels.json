@@ -1,0 +1,8 @@
+{
+  "prompt": "Count participants per HPV genotype from a multi-select whose options include 'Other Group A (31, 33, 52, 58)'. Use the _coded table?",
+  "must_include": [
+    "split",
+    "concept_answer"
+  ],
+  "must_not_include": []
+}

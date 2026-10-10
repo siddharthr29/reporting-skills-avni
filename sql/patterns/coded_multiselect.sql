@@ -1,7 +1,11 @@
 -- PATTERN: per-answer logic on a MULTI-SELECT using the <table>_coded EAV table
 -- Use when: "sessions whose topics are ONLY baseline/endline", "has answer X", counting each answer.
--- Trap it avoids: ILIKE on comma-joined text ('Baseline, Other' matched '%Baseline%'), and
--- answer names that themselves contain commas ('Empathy, Non-Judgement (Gossiping)').
+-- Trap it avoids: ILIKE on comma-joined text ('Baseline, Other' matched '%Baseline%').
+-- CAUTION — labels that contain commas: at PHRII (2026-09-28) the _coded table SPLIT
+-- 'Other Group A (31, 33, 52, 58)' into four answers. Check first:
+--   select distinct answer from <schema>.<table>_coded where answer not in (select name from public.concept);
+-- Any rows → match whole labels on the main text column instead:
+--   ', ' || t."<Concept>" || ', ' LIKE '%, <label from concept_answer>, %'
 -- The _coded table has one row per selected answer: (id, concept_name, answer).
 
 -- A) entities whose answers are ALL within a set  → e.g. exclude pure-baseline sessions
